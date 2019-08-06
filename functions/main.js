@@ -1,4 +1,14 @@
 /* FUNCIONES */
+
+// creacion base de datos web
+var db;
+
+$(document).ready(function(){
+    db = openDatabase('Test',1,'guardar test', 1024);
+});
+
+
+
 // funciones OnsenUI
 window.fnLogin = {};
 
