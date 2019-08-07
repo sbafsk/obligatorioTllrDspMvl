@@ -85,7 +85,7 @@
       <ons-splitter-side id="menu" side="left" width="220px" collapse swipeable>
         <ons-page>
           <ons-list>
-            <ons-list-item onclick="fn.load('altaMedioPago.html')" tappable>
+            <ons-list-item onclick="fn.load('home.html')" tappable>
               Inicio
             </ons-list-item>
             <ons-list-item onclick="fn.load('altaMedioPago.html')" tappable>
@@ -97,7 +97,7 @@
             <ons-list-item onclick="fn.load('cargarSaldo.html')" tappable>
               Cargar saldo
             </ons-list-item>
-            <ons-list-item onclick="fnLogin.loadLogin('login.html')" tappable>
+            <ons-list-item id="cerrarSession" onclick="fnLogin.loadLogin('login.html')" tappable>
               Cerrar sesion
             </ons-list-item>
           </ons-list>
@@ -115,17 +115,17 @@
             <ons-icon icon="md-menu"></ons-icon>
           </ons-toolbar-button>
         </div>
-        <div class="center">
-          Seleccione un monopatin para viajar
+        <div class="center"> 
+          Seleccione un Monopatin
         </div>
       </ons-toolbar>
       <div id="map">
-
+        <!-- AGREGAR MAPA LOCOOOO -->mapa
       </div>
     </ons-page>
   </template>
 
-  <template id="settings.html">
+  <template id="altaMedioPago.html">
     <ons-page>
       <ons-toolbar>
         <div class="left">
@@ -134,13 +134,16 @@
           </ons-toolbar-button>
         </div>
         <div class="center">
-          Settings
+          Alta Medio de Pago
         </div>
       </ons-toolbar>
+      <div>
+        alta medio de pago
+      </div>
     </ons-page>
   </template>
 
-  <template id="about.html">
+  <template id="bajaMedioPago.html">
     <ons-page>
       <ons-toolbar>
         <div class="left">
@@ -149,12 +152,32 @@
           </ons-toolbar-button>
         </div>
         <div class="center">
-          About
+          Baja Medio de Pago
         </div>
       </ons-toolbar>
+      <div>
+        baja medio de pago
+      </div>
     </ons-page>
   </template>
 
+  <template id="cargarSaldo.html">
+    <ons-page>
+      <ons-toolbar>
+        <div class="left">
+          <ons-toolbar-button onclick="fn.open()">
+            <ons-icon icon="md-menu"></ons-icon>
+          </ons-toolbar-button>
+        </div>
+        <div class="center">
+          Cargar Saldo
+        </div>
+      </ons-toolbar>
+      <div>
+        cargar saldo
+      </div>
+    </ons-page>
+  </template>
 </body>
 
 </html>
