@@ -124,8 +124,11 @@ var registrar = function () {
 };
 
 
-$("#cerrarSession").on("click", function() {
-    sessionStorage.setItem("token", null);
-    sessionStorage.setItem("id", null);
-    console.log("Se limpia el sessionStorage")
+$("#nroTarjeta").blur(function() {
+    var nro = $("#nroTarjeta").val();
+    if (nro(0) == 4){
+        $("#logoTarjeta").src("../img/visa-icon.png");
+    } else if (nro(0) == 5){
+        $("#logoTarjeta").src("../img/master-icon.png");
+    }
 });

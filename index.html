@@ -138,7 +138,15 @@
         </div>
       </ons-toolbar>
       <div>
-        alta medio de pago
+        <div style="text-align: center; margin-top: 30px;">
+          <p>
+            <ons-input type="number" id="nroTarjeta" modifier="underbar" placeholder="Numero de tarjeta" float></ons-input>
+          </p> 
+          <img id="logoTarjeta" src="" alt="">         
+          <p style="margin-top: 30px;">
+            <ons-button onclick="login()">Agregar</ons-button>
+          </p>
+        </div>
       </div>
     </ons-page>
   </template>
