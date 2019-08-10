@@ -1,1 +1,10 @@
 /* HOJA DE ESTILOS */
+
+
+img#logoTarjeta {
+    height: 10%;
+    width: 10%;
+    position: relative;
+};
+
+

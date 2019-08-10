@@ -6,17 +6,14 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>Obligatorio</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <!-- JQuery -->
-  <script src="https://code.jquery.com/jquery-3.4.1.min.js"
-    integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous">
-  </script>
+  
   <!-- Onsen UI -->
   <link rel="stylesheet" href="https://unpkg.com/onsenui/css/onsenui.css">
   <link rel="stylesheet" href="https://unpkg.com/onsenui/css/onsen-css-components.min.css">
   <script src="https://unpkg.com/onsenui/js/onsenui.min.js"></script>
   <!-- Local files -->
   <link rel="stylesheet" type="text/css" media="screen" href="styles/main.css" />
-  <script type="text/javascript" src="functions/main.js"></script>
+  
 
 </head>
 
@@ -37,7 +34,7 @@
           <ons-input id="password" modifier="underbar" type="password" placeholder="Contraseña" float></ons-input>
         </p>
         <p style="margin-top: 30px;">
-          <ons-button onclick="login()">Ingresar</ons-button>
+          <ons-button onclick="Login()">Ingresar</ons-button>
         </p>
       </div>
       <br>
@@ -67,7 +64,7 @@
           </ons-input>
         </p>
         <p style="margin-top: 30px;">
-          <ons-button onclick="registrar()">Registrar</ons-button>
+          <ons-button onclick="Registrar()">Registrar</ons-button>
         </p>
       </div>
       <br>
@@ -97,7 +94,7 @@
             <ons-list-item onclick="fn.load('cargarSaldo.html')" tappable>
               Cargar saldo
             </ons-list-item>
-            <ons-list-item id="cerrarSession" onclick="fnLogin.loadLogin('login.html')" tappable>
+            <ons-list-item input-id="cerrarSession" onclick="fnLogin.loadLogin('login.html')" tappable>
               Cerrar sesion
             </ons-list-item>
           </ons-list>
@@ -140,11 +137,12 @@
       <div>
         <div style="text-align: center; margin-top: 30px;">
           <p>
-            <ons-input type="number" id="nroTarjeta" modifier="underbar" placeholder="Numero de tarjeta" float></ons-input>
+            <ons-input type="text" input-id="nroTarjeta" modifier="underbar" placeholder="Numero de tarjeta" float></ons-input>
+            <img id="logoTarjeta" src="" alt="">    
           </p> 
-          <img id="logoTarjeta" src="" alt="">         
+               
           <p style="margin-top: 30px;">
-            <ons-button onclick="login()">Agregar</ons-button>
+            <ons-button onclick="AltaMedioPago()">Agregar</ons-button>
           </p>
         </div>
       </div>
@@ -186,6 +184,12 @@
       </div>
     </ons-page>
   </template>
+
+  <!-- JQuery -->
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js"
+    integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous">
+  </script>
+  <script type="text/javascript" src="functions/main.js"></script>
 </body>
 
 </html>

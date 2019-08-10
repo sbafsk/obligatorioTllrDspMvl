@@ -3,11 +3,35 @@
 // prueba creacion base de datos web
 var db;
 
-$(document).ready(function(){
-    db = openDatabase('Test',1,'guardar test', 1024);
-});
+$(document).ready(init);
 
-console.log();
+function OpenDataBase(){
+    db = openDatabase('Test',1,'guardar test', 1024);
+};
+
+function init() {
+    OpenDataBase();
+
+    // evento espero digito de tarjeta
+    $("#nroTarjeta").on('input', function() {
+        var nro = document.getElementById('nroTarjeta').value;
+        console.log("starting digit " + nro.charAt(0));
+        $("#logoTarjeta").attr("src",IconoNroTarjeta(nro));
+    });
+};
+
+
+// modifico logo tarjeta
+function IconoNroTarjeta(nro) {    
+    var src = "";
+    if (nro.charAt(0) == 4){
+        src = "../img/visa-icon.png";
+    } else if (nro.charAt(0) == 5){
+        src = "../img/master-icon.png";
+    }
+    return src;
+};
+
 
 // funciones OnsenUI
 // manejo pantalla inicia Login/Registrar
@@ -41,7 +65,7 @@ window.fn.load = function (page) {
 
 
 // funcion de Login
-var login = function () {
+function Login() {
     // obtengo los valores del form
     var username = document.getElementById('username').value;
     var password = document.getElementById('password').value;
@@ -83,7 +107,7 @@ var login = function () {
 
 
 // funcion registro 
-var registrar = function () {
+function Registar() {
     // obtengo los valores del form
     var username = document.getElementById('username').value;
     var password = document.getElementById('password').value;
@@ -91,6 +115,7 @@ var registrar = function () {
 
     // valido que los campos tengan valores
     if (username != "" && password != "" && confPassword != "") {
+        
         if (password === confPassword) {            
             var settings = {
                 "url": "http://oransh.develotion.com/usuarios.php",
@@ -124,11 +149,33 @@ var registrar = function () {
 };
 
 
-$("#nroTarjeta").blur(function() {
-    var nro = $("#nroTarjeta").val();
-    if (nro(0) == 4){
-        $("#logoTarjeta").src("../img/visa-icon.png");
-    } else if (nro(0) == 5){
-        $("#logoTarjeta").src("../img/master-icon.png");
-    }
-});
+function AltaMedioPago() {
+
+    var nroTarjeta = document.getElementById('nroTarjeta').value;
+    var settings = {
+        "url": "http://oransh.develotion.com/tarjetas.php",
+        "method": "POST",
+        "timeout": 0,
+        "headers": {
+          "token": sessionStorage.getItem("token"),
+          "Content-Type": "application/x-www-form-urlencoded"
+        },
+        "data": {
+          "id": sessionStorage.getItem("id"),
+          "numero": nroTarjeta
+        }
+      };
+      
+      $.ajax(settings).done(function (response) {
+        console.log(response.responseJSON.mensaje);
+      });
+      
+      $.ajax(settings).fail(function (response) {
+        console.log(response.responseJSON.mensaje);
+      });
+};
+
+
+
+
+
