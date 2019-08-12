@@ -151,28 +151,62 @@ function Registar() {
 
 function AltaMedioPago() {
 
+
     var nroTarjeta = document.getElementById('nroTarjeta').value;
-    var settings = {
-        "url": "http://oransh.develotion.com/tarjetas.php",
-        "method": "POST",
-        "timeout": 0,
-        "headers": {
-          "token": sessionStorage.getItem("token"),
-          "Content-Type": "application/x-www-form-urlencoded"
-        },
-        "data": {
-          "id": sessionStorage.getItem("id"),
-          "numero": nroTarjeta
-        }
-      };
-      
-      $.ajax(settings).done(function (response) {
-        console.log(response.responseJSON.mensaje);
-      });
-      
-      $.ajax(settings).fail(function (response) {
-        console.log(response.responseJSON.mensaje);
-      });
+
+    if (nroTarjeta.lenght == 16 ) {
+        var settings = {
+            "url": "http://oransh.develotion.com/tarjetas.php",
+            "method": "POST",
+            "timeout": 0,
+            "headers": {
+              "token": sessionStorage.getItem("token"),
+              "Content-Type": "application/x-www-form-urlencoded"
+            },
+            "data": {
+              "id": sessionStorage.getItem("id"),
+              "numero": nroTarjeta
+            }
+          };
+          
+          $.ajax(settings).done(function (response) {
+            console.log(response.responseJSON.mensaje);
+          });
+          
+          $.ajax(settings).fail(function (response) {
+            console.log(response.responseJSON.mensaje);
+          });
+    } else {
+        ons.notification.alert('Debe ingresar 16 digitos.');
+    }
+    
+};
+
+function BajaMedioPago() {
+
+    if (console.prompt("Desea eliminar su medio de pago ?")) {
+        var settings = {
+            "url": "http://oransh.develotion.com/tarjetas.php",
+            "method": "POST",
+            "timeout": 0,
+            "headers": {
+              "token": sessionStorage.getItem("token"),
+              "Content-Type": "application/x-www-form-urlencoded"
+            },
+            "data": {
+              "id": sessionStorage.getItem("id")
+            }
+          };
+          
+          $.ajax(settings).done(function (response) {
+            console.log(response.responseJSON.mensaje);
+          });
+          
+          $.ajax(settings).fail(function (response) {
+            console.log(response.responseJSON.mensaje);
+          });
+    }; 
+    
 };
 
 
