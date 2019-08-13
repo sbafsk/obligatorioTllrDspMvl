@@ -6,32 +6,35 @@ var db;
 $(document).ready(init);
 
 function OpenDataBase(){
-    db = openDatabase('Test',1,'guardar test', 1024);
+    db = openDatabase('TestDB',1,'guardar test', 1024);
 };
 
 function init() {
-    OpenDataBase();
+    OpenDataBase();  
+};
 
-    // evento espero digito de tarjeta
-    $("#nroTarjeta").on('input', function() {
-        var nro = document.getElementById('nroTarjeta').value;
-        console.log("starting digit " + nro.charAt(0));
+
+function FuncionesAltaMedioDePago(){
+    // obtengo primer digito para setear la imagen de la tarjeta
+    $("#nroTarjeta").on("input", function() {
+        var nro = document.getElementById("nroTarjeta").value;
         $("#logoTarjeta").attr("src",IconoNroTarjeta(nro));
     });
-};
+       
+    function IconoNroTarjeta(nro) {    
+        var src = "";
+        if (nro.charAt(0) == "4"){
+            src = "../img/visa-icon.png";
+        } else if (nro.charAt(0) == "5"){
+            src = "../img/master-icon.png";
+        }
+        return src;
+    };     
+}
 
+function FuncionesBajaMedioDePago() {
 
-// modifico logo tarjeta
-function IconoNroTarjeta(nro) {    
-    var src = "";
-    if (nro.charAt(0) == 4){
-        src = "../img/visa-icon.png";
-    } else if (nro.charAt(0) == 5){
-        src = "../img/master-icon.png";
-    }
-    return src;
-};
-
+}
 
 // funciones OnsenUI
 // manejo pantalla inicia Login/Registrar
@@ -57,10 +60,19 @@ window.fn.open = function () {
 };
 
 window.fn.load = function (page) {
+    
     var content = document.getElementById('content');
     var menu = document.getElementById('menu');
     content.load(page)
         .then(menu.close.bind(menu));
+
+    if (page == "altaMedioPago.html") {
+        $("#nroTarjeta").ready(FuncionesAltaMedioDePago);
+    }
+
+    if (page == "bajaMedioPago.html") {
+        $("#nroTarjeta").ready(FuncionesBajaMedioDePago);
+    }
 };
 
 
@@ -86,12 +98,9 @@ function Login() {
         };
 
         $.ajax(settings).done(function (response) {
-            console.log(response);
             sessionStorage.setItem("token", response.token);
-            sessionStorage.setItem("id", response.id);
-            console.log(sessionStorage.getItem("id"));
-            console.log(sessionStorage.getItem("token"));
-            ons.notification.alert('Bienvenido !');
+            sessionStorage.setItem("id", response.id);       
+            
             var content = document.getElementById('contentLogin');
             content.load('appPage.html');
         });
@@ -107,7 +116,7 @@ function Login() {
 
 
 // funcion registro 
-function Registar() {
+function Registrar() {
     // obtengo los valores del form
     var username = document.getElementById('username').value;
     var password = document.getElementById('password').value;
@@ -154,7 +163,7 @@ function AltaMedioPago() {
 
     var nroTarjeta = document.getElementById('nroTarjeta').value;
 
-    if (nroTarjeta.lenght == 16 ) {
+    if (nroTarjeta.length == 16 ) {
         var settings = {
             "url": "http://oransh.develotion.com/tarjetas.php",
             "method": "POST",
@@ -187,7 +196,7 @@ function BajaMedioPago() {
     if (console.prompt("Desea eliminar su medio de pago ?")) {
         var settings = {
             "url": "http://oransh.develotion.com/tarjetas.php",
-            "method": "POST",
+            "method": "DEL",
             "timeout": 0,
             "headers": {
               "token": sessionStorage.getItem("token"),

@@ -5,8 +5,7 @@
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>Obligatorio</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="shortcut icon" href="">
+  <meta name="viewport" content="width=device-width, initial-scale=1">  
 
   <!-- Onsen UI -->
   <link rel="stylesheet" href="https://unpkg.com/onsenui/css/onsenui.css">
@@ -14,7 +13,11 @@
   <script src="https://unpkg.com/onsenui/js/onsenui.min.js"></script>
   <!-- Local files -->
   <link rel="stylesheet" type="text/css" media="screen" href="styles/main.css" />
-  
+  <!-- JQuery -->
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js"
+    integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous">
+  </script>
+  <script type="text/javascript" src="functions/main.js"></script>
 
 </head>
 
@@ -135,8 +138,8 @@
           Alta Medio de Pago
         </div>
       </ons-toolbar>
-      <div>
-        <div style="text-align: center; margin-top: 30px;">
+      <div style="text-align: center; margin-top: 30px;">
+        
           <p>
             <ons-input type="text" input-id="nroTarjeta" modifier="underbar" placeholder="Numero de tarjeta" float></ons-input>
             <img id="logoTarjeta" src="" alt="">    
@@ -145,7 +148,7 @@
           <p style="margin-top: 30px;">
             <ons-button onclick="AltaMedioPago()">Agregar</ons-button>
           </p>
-        </div>
+        
       </div>
     </ons-page>
   </template>
@@ -162,9 +165,18 @@
           Baja Medio de Pago
         </div>
       </ons-toolbar>
-      <div>
-        baja medio de pago
-      </div>
+      <div style="text-align: center; margin-top: 30px;">
+        
+        <p>
+          <ons-input type="text" input-id="nroTarjeta" placeholder="" disabled="disabled"></ons-input>
+          <img id="logoTarjeta" src="" alt="">    
+        </p> 
+             
+        <p style="margin-top: 30px;">
+          <ons-button onclick="AltaMedioPago()">Agregar</ons-button>
+        </p>
+      
+    </div>
     </ons-page>
   </template>
 
@@ -186,11 +198,7 @@
     </ons-page>
   </template>
 
-  <!-- JQuery -->
-  <script src="https://code.jquery.com/jquery-3.4.1.min.js"
-    integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous">
-  </script>
-  <script type="text/javascript" src="functions/main.js"></script>
+  
 </body>
 
 </html>
