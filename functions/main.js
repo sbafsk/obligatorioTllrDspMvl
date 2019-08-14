@@ -206,8 +206,7 @@ function ConsultarMonopatines() {
             console.log("doneMP");
             console.log(response);
             MostrarMapa();
-            CentrarMapa(response.centrado.latitud, response.centrado.longitud);
-            MostrarMonopatines(response.monopatines);
+            MostrarMonopatines(response);
         })
         .fail(function (response) {
             console.log("failMP");
@@ -216,18 +215,82 @@ function ConsultarMonopatines() {
         });
 }
 
-function MostrarMonopatines(monopatines) {
+function MostrarMonopatines(response) {
 
-    monopatines.forEach(mp => {
-        L.marker([mp.latitud, mp.longitud]).addTo(map)
-            .bindPopup(VentanaMonopatin(mp));
+    var myLat = response.centrado.latitud;
+    var myLon = response.centrado.longitud;
+    var monopatinesCercanos = [];
+    var distancias = [];
 
+    CentrarMapa(myLat, myLon);    
+
+    response.monopatines.forEach(mp => {
+        distancias.push(FormulaHaversine([mp.latitud, mp.longitud], [myLat, myLon], mp.codigo));
     });
+
+    distancias.sort();    
+
+    for (let i = 0; i < 5; i++) {
+        response.monopatines.forEach(mp => {
+            if (mp.codigo == distancias[i][1]) {
+                monopatinesCercanos.push(mp);
+            };
+        });        
+    };
+
+    console.log(monopatinesCercanos);
+
+    monopatinesCercanos.forEach(mpC => {
+        L.marker([mpC.latitud, mpC.longitud]).addTo(map)
+            .bindPopup(VentanaMonopatin(mpC))
+            .on('popupopen', function () {
+                console.log("popup opened !");
+                $(".desbloquear").on("click", function () {
+                    var codigo = $("#monopatin #cod").text();
+                    var bateria = $("#monopatin #bat").text();
+                    console.log("monopatin " + codigo + " " + bateria);
+                    if (bateria > 4) {
+                        DesbloquearMonopatin();
+                    } else {
+                        ons.notification.alert("Bateria menor al 5%");
+                    }
+                });
+            });;
+    });
+
+
+
+}
+
+function FormulaHaversine(coords1, coords2, cod) {
+    function toRad(x) {
+        return x * Math.PI / 180;
+    }
+
+    var lon1 = coords1[0];
+    var lat1 = coords1[1];
+
+    var lon2 = coords2[0];
+    var lat2 = coords2[1];
+
+    var R = 6371; // km
+
+    var x1 = lat2 - lat1;
+    var dLat = toRad(x1);
+    var x2 = lon2 - lon1;
+    var dLon = toRad(x2)
+    var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
+        Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    var d = R * c;
+
+    return [d,cod];
 }
 
 function VentanaMonopatin(monopatin) {
-    var ventana = "<div class='monopatin'><p>Monopatin " + monopatin.codigo + "</p>";
-    ventana += "<p>Bateria restante " + monopatin.bateria + "%</p>";
+    var ventana = "<div id='monopatin'><p>Monopatin <span id='cod'>" + monopatin.codigo + "</span></p>";
+    ventana += "<p>Bateria restante <span id='bat'>" + monopatin.bateria + "</span>%</p>";
     ventana += "<button class='desbloquear'>Desbloquear</button></div>";
 
     return ventana;
@@ -236,10 +299,11 @@ function VentanaMonopatin(monopatin) {
 
 function DesbloquearMonopatin() {
 
+
 }
 
 function BloquearMonopatin() {
-    
+
 }
 
 
