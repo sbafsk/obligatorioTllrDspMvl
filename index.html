@@ -5,19 +5,32 @@
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>Obligatorio</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">  
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <!-- Onsen UI -->
   <link rel="stylesheet" href="https://unpkg.com/onsenui/css/onsenui.css">
   <link rel="stylesheet" href="https://unpkg.com/onsenui/css/onsen-css-components.min.css">
   <script src="https://unpkg.com/onsenui/js/onsenui.min.js"></script>
-  <!-- Local files -->
-  <link rel="stylesheet" type="text/css" media="screen" href="styles/main.css" />
+
   <!-- JQuery -->
   <script src="https://code.jquery.com/jquery-3.4.1.min.js"
     integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous">
-  </script>
+    </script>
+
+
+
+  <!-- Leaflet -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css"
+    integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+    crossorigin="" />
+  <script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js"
+    integrity="sha512-GffPMF3RvMeYyc1LWMHtK8EbPv0iNZ8/oTtHPx9/cc2ILxQ+u905qIwdpULaqDkyBKgOaB57QTMg7ztg8Jm2Og=="
+    crossorigin=""></script>
+
+  <!-- Local files -->
+  <link rel="stylesheet" type="text/css" media="screen" href="styles/main.css" />
   <script type="text/javascript" src="functions/main.js"></script>
+
 
 </head>
 
@@ -83,7 +96,8 @@
 
   <template id="appPage.html">
     <ons-splitter>
-      <ons-splitter-side id="menu" side="left" width="220px" collapse swipeable>
+      <!-- removed swipeable-->
+      <ons-splitter-side id="menu" side="left" width="220px" collapse>
         <ons-page>
           <ons-list>
             <ons-list-item onclick="fn.load('home.html')" tappable>
@@ -97,6 +111,9 @@
             </ons-list-item>
             <ons-list-item onclick="fn.load('cargarSaldo.html')" tappable>
               Cargar saldo
+            </ons-list-item>
+            <ons-list-item onclick="fn.load('historico.html')" tappable>
+              Ver historial
             </ons-list-item>
             <ons-list-item input-id="cerrarSession" onclick="fnLogin.loadLogin('login.html')" tappable>
               Cerrar sesion
@@ -116,12 +133,12 @@
             <ons-icon icon="md-menu"></ons-icon>
           </ons-toolbar-button>
         </div>
-        <div class="center"> 
+        <div class="center">
           Seleccione un Monopatin
         </div>
       </ons-toolbar>
       <div id="map">
-        <!-- AGREGAR MAPA LOCOOOO -->mapa
+
       </div>
     </ons-page>
   </template>
@@ -131,7 +148,7 @@
       <ons-toolbar>
         <div class="left">
           <ons-toolbar-button onclick="fn.open()">
-            <ons-icon icon="md-menu"></ons-icon>
+            <ons-icon class="iconMenu" icon="md-menu"></ons-icon>
           </ons-toolbar-button>
         </div>
         <div class="center">
@@ -139,16 +156,18 @@
         </div>
       </ons-toolbar>
       <div style="text-align: center; margin-top: 30px;">
-        
-          <p>
-            <ons-input type="number" input-id="nroTarjeta" modifier="underbar" placeholder="Numero de tarjeta" float></ons-input>
-            <img id="logoTarjeta" src="" alt="">    
-          </p> 
-               
-          <p style="margin-top: 30px;">
-            <ons-button onclick="AltaMedioPago()">Agregar</ons-button>
-          </p>
-        
+
+        <p>
+          <ons-input type="number" input-id="nroTarjeta" id="nroTarjeta" modifier="underbar"
+            placeholder="Numero de tarjeta" float>
+          </ons-input>
+          <img id="logoTarjeta" src="" alt="">
+        </p>
+
+        <p style="margin-top: 30px;">
+          <ons-button id="AgregarMedioPago" onclick="AltaMedioPago()">Agregar</ons-button>
+        </p>
+
       </div>
     </ons-page>
   </template>
@@ -166,17 +185,17 @@
         </div>
       </ons-toolbar>
       <div style="text-align: center; margin-top: 30px;">
-        
+
         <p>
-          <ons-input type="text" input-id="nroTarjeta" placeholder="" value="" disable float> </ons-input>
-          <img id="logoTarjeta" src="" alt="">    
-        </p> 
-             
-        <p style="margin-top: 30px;">
-          <ons-button id="EliminarMedioPago" onclick="BajaMedioPago()">Eliminar</ons-button>
+          <ons-input type="text" input-id="nroTarjeta" placeholder="" value="" disabled float> </ons-input>
+          <img id="logoTarjeta" src="" alt="">
         </p>
-      
-    </div>
+
+        <p style="margin-top: 30px;">
+          <ons-button id="EliminarMedioPago" onclick="BajaMedioPago()" disabled>Eliminar</ons-button>
+        </p>
+
+      </div>
     </ons-page>
   </template>
 
@@ -192,13 +211,45 @@
           Cargar Saldo
         </div>
       </ons-toolbar>
-      <div>
-        cargar saldo
+      <div style="text-align: center; margin-top: 50px;">
+        <p>
+          $<ons-input type="numer" id="saldoActual" modifier="underbar" placeholder="Saldo Actual" float disable>
+          </ons-input>
+        </p>
+      </div>
+      <br>
+      <hr>
+      <div style="text-align: center; margin-top: 40px;">
+        <p>
+          <ons-input type="numer" id="saldoModificar" modifier="underbar" placeholder="Ingrese un monto" float>
+          </ons-input>
+        </p>
+        <p style="margin-top: 30px;">
+          <ons-button id="AgregarSaldo" onclick="ModificarSaldo()">Agregar Saldo</ons-button>
+        </p>
       </div>
     </ons-page>
   </template>
 
-  
+  <template id="historico.html">
+    <ons-page>
+      <ons-toolbar>
+        <div class="left">
+          <ons-toolbar-button onclick="fn.open()">
+            <ons-icon icon="md-menu"></ons-icon>
+          </ons-toolbar-button>
+        </div>
+        <div class="center">
+          Historico de viajes
+        </div>
+      </ons-toolbar>
+      <div id="map">
+        historico de viajes
+      </div>
+    </ons-page>
+  </template>
+
+
 </body>
 
 </html>
