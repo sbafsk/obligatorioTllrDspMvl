@@ -141,7 +141,7 @@
       <div style="text-align: center; margin-top: 30px;">
         
           <p>
-            <ons-input type="text" input-id="nroTarjeta" modifier="underbar" placeholder="Numero de tarjeta" float></ons-input>
+            <ons-input type="number" input-id="nroTarjeta" modifier="underbar" placeholder="Numero de tarjeta" float></ons-input>
             <img id="logoTarjeta" src="" alt="">    
           </p> 
                
@@ -168,12 +168,12 @@
       <div style="text-align: center; margin-top: 30px;">
         
         <p>
-          <ons-input type="text" input-id="nroTarjeta" placeholder="" disabled="disabled"></ons-input>
+          <ons-input type="text" input-id="nroTarjeta" placeholder="" value="" disable float> </ons-input>
           <img id="logoTarjeta" src="" alt="">    
         </p> 
              
         <p style="margin-top: 30px;">
-          <ons-button onclick="AltaMedioPago()">Agregar</ons-button>
+          <ons-button id="EliminarMedioPago" onclick="BajaMedioPago()">Eliminar</ons-button>
         </p>
       
     </div>
