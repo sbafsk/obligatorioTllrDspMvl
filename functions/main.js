@@ -224,12 +224,14 @@ function MostrarMonopatines(response) {
 
     CentrarMapa(myLat, myLon);    
 
+    // obtengo distancias
     response.monopatines.forEach(mp => {
         distancias.push(FormulaHaversine([mp.latitud, mp.longitud], [myLat, myLon], mp.codigo));
     });
 
     distancias.sort();    
 
+    // obtengo los 5 mas cercanos
     for (let i = 0; i < 5; i++) {
         response.monopatines.forEach(mp => {
             if (mp.codigo == distancias[i][1]) {
@@ -298,12 +300,19 @@ function VentanaMonopatin(monopatin) {
 
 
 function DesbloquearMonopatin() {
-
+    // TO-DO    
+    // validar saldo [salta si no tiene tarjeta]
+    // modificar ventana monopatin    
+    // setear monopatin en uso [manejar con sessionStorage?]
 
 }
 
 function BloquearMonopatin() {
-
+    // TO-DO
+    // finalizar calculo de costo
+    // restar saldo
+    // setear monopatin como libre [manejar con sessionStorage?]
+    // guardar registro para historial
 }
 
 
