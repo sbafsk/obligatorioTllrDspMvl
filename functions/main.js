@@ -75,90 +75,93 @@ window.fn.load = function (page) {
 // funcion de Login
 function Login() {
     // obtengo los valores del form
-    var username = document.getElementById("username").value;
-    var password = document.getElementById("password").value;
+    var emailImpt = $("#email").val();
+    var passwordImpt = $("#password").val();
+    try {
 
-    // valido que los campos tengan valores
-    if (username != "" && password != "") {
-        var settings = {
-            "url": "http://oransh.develotion.com/login.php",
-            "method": "POST",
-            "timeout": 0,
-            "headers": {
-                "Content-Type": "application/x-www-form-urlencoded"
-            },
-            "data": {
-                "usuario": username,
-                "password": password
-            }
-        };
+        if (emailImpt === "") {
+            throw new Error("El email no puede estar vacio");
+        }
+        if (passwordImpt === "") {
+            throw new Error("La contraseña no puede estar vacio");
+        }
 
-        $.ajax(settings)
-            .done(function (response) {
-                console.log("doneLogin");
-                sessionStorage.setItem("token", response.token);
-                sessionStorage.setItem("id", response.id);
 
+        $.ajax({
+            url: "https://tiendanatural2020.herokuapp.com/api/user/login",
+            type: "POST", //forma de envio de datos 
+            dataType: "JSON", //tipo de dato de retorno
+            data: JSON.stringify({ email: emailImpt, password: passwordImpt }),
+            contentType: 'application/json',
+            success: function (json) {
+                sessionStorage.setItem("identificador",json._id);
                 var content = document.getElementById("contentLogin");
                 content.load("appPage.html");
-                ConsultarMonopatines();
 
-            })
+            },
+            error: function (response) {
+                ons.notification.alert(response.status);
+                console.log("failLogin" + response);    
+            }
+        });
 
-            .fail(function (response) {
-                console.log("failLogin");
-                console.log(response.responseJSON.mensaje);
-                ons.notification.alert(response.responseJSON.mensaje);
-            });
-    } else {
-        ons.notification.alert("Los campos no pueden quedar en blanco.");
+    } catch (e) {
+        alert(e.message);
     }
+   
 };
 
 
 // funcion registro 
 function Registrar() {
     // obtengo los valores del form
-    var username = document.getElementById("username").value;
-    var password = document.getElementById("password").value;
-    var confPassword = document.getElementById("confPassword").value;
+    var emailImpt = $("#email").val();
+    var passwordImpt = $("#password").val();
+    var confPassword = $("#confPassword").val();
 
-    // valido que los campos tengan valores
-    if (username != "" && password != "" && confPassword != "") {
-
-        if (password === confPassword) {
-            var settings = {
-                "url": "http://oransh.develotion.com/usuarios.php",
-                "method": "POST",
-                "timeout": 0,
-                "headers": {
-                    "Content-Type": "application/x-www-form-urlencoded"
-                },
-                "data": {
-                    "usuario": username,
-                    "password": password
-                }
-            };
-
-            $.ajax(settings)
-                .done(function (response) {
-                    console.log("doneReg");
-                    ons.notification.alert("Registro con Exito<br>Ahora puedes ingresar");
-                    var contentLogin = document.getElementById("contentLogin");
-                    contentLogin.load("login.html");
-                })
-
-                .fail(function (response) {
-                    console.log("failReg");
-                    console.log(response.responseJSON.mensaje);
-                    ons.notification.alert(response.responseJSON.mensaje);
-                });
-        } else {
-            ons.notification.alert("Las contraseñas deben ser identicas.");
+    try {
+        if (emailImpt === "") {
+            throw new Error("El email no puede estar vacio");
         }
-    } else {
-        ons.notification.alert("Los campos no pueden quedar en blanco.");
+        if (passwordImpt === "") {
+            throw new Error("La contraseña no puede estar vacio");
+        }
+        if (confPassword === "") {
+            throw new Error("La confirmacion de contraseña no puede estar vacio");
+        }
+        if (passwordImpt != confPassword) {
+            throw new Error("Las contraseñas debe coincidir");
+        }
+        
+        var datos = { email: emailImpt, password: passwordImpt }
+
+        $.ajax({
+            url: "https://tiendanatural2020.herokuapp.com/api/user/register",
+            type: "POST", //forma de envio de datos 
+            dataType: "JSON", //tipo de dato de retorno
+            data: JSON.stringify(datos),
+            contentType: 'application/json',
+            success: function (json) {
+
+                ons.notification.alert("Usuario generado correctamente");
+                //guardarDatos(emailImpt,passwordImpt);
+                console.log("doneReg");
+                ons.notification.alert("Registro con Exito<br>Ahora puedes ingresar");
+                var contentLogin = document.getElementById("contentLogin");
+                contentLogin.load("login.html");
+
+            },
+            error: function (err, cod, msg) {
+                ons.notification.alert(err+" "+ cod+" "+ msg);                
+                console.log("failReg");        
+
+            }
+        });
+
+    } catch (error) {
+        ons.notification.alert(error.message);
     }
+   
 };
 
 
