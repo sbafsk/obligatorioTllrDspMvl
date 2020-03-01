@@ -18,12 +18,13 @@ function init() {
 
 
 // funciones OnsenUI
-// manejo pantalla inicia Login/Registrar
+// manejo pantalla inicio - Login/Registrar
 window.fnLogin = {};
 
 window.fnLogin.loadLogin = function (page) {
-    var content = document.getElementById("contentLogin");
+    var content = $("#contentLogin")[0];               
     content.load(page);
+    
 
     // intente asignarle null, pero luego al valdar (id != null) siempre da true, JS es raro.
     if (sessionStorage.getItem("id") != "vacio") {
@@ -35,37 +36,33 @@ window.fnLogin.loadLogin = function (page) {
 };
 
 
-// manejo pantalla principal Mapa/AB medio pago/cargar saldo
+// manejo pantalla principal - Mapa/AB medio pago/cargar saldo
 window.fn = {};
 
-window.fn.open = function () {
-    var menu = document.getElementById("menu");
+window.fn.open = function () {    
+    var menu = $("#menu")[0];
     menu.open();
 };
 
 window.fn.load = function (page) {
 
-    var content = document.getElementById("content");
-    var menu = document.getElementById("menu");
+    var content = $("#content")[0];
+    var menu = $("#menu")[0];
     content.load(page)
         .then(menu.close.bind(menu));
 
 
-    switch (page) {
-        case "altaMedioPago.html":
-            $("#nroTarjeta").ready(MostrarIconoTarjeta);
-            ObtenerSaldo("alta");
-            break;
-        case "bajaMedioPago.html":
-            $("#nroTarjeta").ready(MostrarIconoTarjeta);
-            ObtenerSaldo("baja");
-            break;
-        case "cargarSaldo.html":
-            ObtenerSaldo("cargar");
-            break;
+    switch (page) {   
         case "home.html":
-            ConsultarMonopatines();
+            
+            break;     
+        case "misBusquedas.html":            
+            
             break;
+        case "escanearProducto.html":
+            
+            break;
+        
         default:
             break;
     }
@@ -93,15 +90,14 @@ function Login() {
             dataType: "JSON", //tipo de dato de retorno
             data: JSON.stringify({ email: emailImpt, password: passwordImpt }),
             contentType: 'application/json',
-            success: function (json) {
-                sessionStorage.setItem("identificador",json._id);
-                var content = document.getElementById("contentLogin");
+            success: function () {
+                var content = $("#contentLogin")[0];                
                 content.load("appPage.html");
 
             },
-            error: function (response) {
-                ons.notification.alert(response.status);
-                console.log("failLogin" + response);    
+            error: function (json) {               
+                console.log(json.responseJSON.name);   
+                ons.notification.alert(json.responseJSON.name + " : <br> Verifique mail y contraseña."); 
             }
         });
 
@@ -141,19 +137,22 @@ function Registrar() {
             dataType: "JSON", //tipo de dato de retorno
             data: JSON.stringify(datos),
             contentType: 'application/json',
-            success: function (json) {
-
-                ons.notification.alert("Usuario generado correctamente");
-                //guardarDatos(emailImpt,passwordImpt);
-                console.log("doneReg");
+            success: function () {  
                 ons.notification.alert("Registro con Exito<br>Ahora puedes ingresar");
-                var contentLogin = document.getElementById("contentLogin");
+                var contentLogin = $("#contentLogin")[0];
                 contentLogin.load("login.html");
-
             },
-            error: function (err, cod, msg) {
-                ons.notification.alert(err+" "+ cod+" "+ msg);                
-                console.log("failReg");        
+            error: function (json) {
+                var jR = json.responseJSON;
+                console.log(jR);
+                if(jR.reason) {
+                    console.log(jR.reason); 
+                    ons.notification.alert(jR.reason);  
+                } else {
+                    console.log(jR.data.error.errors.email.message); 
+                    ons.notification.alert(jR.data.error.errors.email.message); 
+                }
+                      
 
             }
         });
@@ -162,6 +161,61 @@ function Registrar() {
         ons.notification.alert(error.message);
     }
    
+};
+
+// buscar producto
+function BuscarProducto() {
+    
+    var filtro = $("#productoInp").val(); 
+    $("#resultadoBusqueda").html(""); 
+    
+    try{        
+
+        $.ajax({        
+            url:"http://tiendanatural2020.herokuapp.com/api/product/all",
+    
+            type:"GET",
+    
+            dataType:"Json",
+    
+            contentType:'application/json',           
+    
+            success: function(response){              
+                var found = false;              
+
+                $.each(response,function(i,value){  
+
+                    if(producto === "" || value.name.toUpperCase().includes(filtro.toUpperCase())) {  
+
+                        var prod = "<ons-list modifier='inset' style='margin-bottom: 1vh'>"
+                            +"  <img src='"+value.photo+"' style='width: 100%'>" 
+                            +"  <ons-list-item><div class='center'><b>"+value.name+"</b></div></ons-list-item>"                         
+                            +"  <ons-list-item><div class='right'>$"+value.price+"</div></ons-list-item>"
+                            +"  <ons-list-item modifier='longdivider'>"+value.description+"</ons-list-item>"
+                            +"  <ons-list-item modifier='longdivider'>En "+value.branches.length+" sucursales.</ons-list-item>"
+                            +"</ons-list>"; 
+                        $("#resultadoBusqueda").append(prod);                  
+                        found = true;
+                    }
+                });
+
+                if(!found) {
+                    ons.notification.alert("No se encontraron productos");
+                }
+
+            },            
+            error: function(response) {
+                console.log("failConsultarProducots");
+                console.log(response.mensaje);
+                ons.notification.alert("Hubo un problema para acceder al listado de productos.");
+            }
+        })
+        
+
+    } catch (error) {
+        ons.notification.alert(error.message);
+    }    
+
 };
 
 
@@ -194,29 +248,6 @@ function CentrarMapa(lat, lon) {
 }
 
 
-function ConsultarMonopatines() {
-    var settings = {
-        "url": "http://oransh.develotion.com/monopatines.php",
-        "method": "GET",
-        "timeout": 0,
-        "headers": {
-            "token": sessionStorage.getItem("token")
-        }
-    };
-
-    $.ajax(settings)
-        .done(function (response) {
-            console.log("doneMP");
-            console.log(response);
-            MostrarMapa();
-            MostrarMonopatines(response);
-        })
-        .fail(function (response) {
-            console.log("failMP");
-            console.log(response.responseJSON.mensaje);
-            ons.notification.alert("No se pueden obtener los monopatines.");
-        });
-}
 
 function MostrarMonopatines(response) {
 
@@ -302,65 +333,13 @@ function VentanaMonopatin(monopatin) {
 }
 
 
-function DesbloquearMonopatin() {
-    // TO-DO    
-    // validar saldo [salta si no tiene tarjeta]
-    // modificar ventana monopatin    
-    // setear monopatin en uso [manejar con sessionStorage?]
-
-}
-
-function BloquearMonopatin() {
-    // TO-DO
-    // finalizar calculo de costo
-    // restar saldo
-    // setear monopatin como libre [manejar con sessionStorage?]
-    // guardar registro para historial
-}
 
 
 
 
 
-// alta medio de pago
-function AltaMedioPago() {
-    // var nroTarjeta = document.getElementById("nroTarjeta").value;
-    var nroTarjeta = $("#nroTarjeta").val();
-    // el numero de la tarjeta deben ser 16 digitos
-    if (nroTarjeta.length == 16) {
-        var settings = {
-            "url": "http://oransh.develotion.com/tarjetas.php",
-            "method": "POST",
-            "timeout": 0,
-            "headers": {
-                "token": sessionStorage.getItem("token"),
-                "Content-Type": "application/x-www-form-urlencoded"
-            },
-            "data": {
-                "id": sessionStorage.getItem("id"),
-                "numero": nroTarjeta
-            }
-        };
 
-        $.ajax(settings)
-            .done(function (response) {
-                console.log("doneAlta");
-                console.log(response.mensaje);
-                $("#nroTarjeta").prop("disabled", true);
-                $("#AgregarMedioPago").prop("disabled", true);
-                ons.notification.alert(response.mensaje);
 
-            })
-            .fail(function (response) {
-                console.log("failAlta");
-                console.log(response.responseJSON.mensaje);
-                ons.notification.alert(response.responseJSON.mensaje);
-            });
-    } else {
-        ons.notification.alert("Debe ingresar 16 digitos.");
-    }
-
-};
 
 
 function BajaMedioPago() {
@@ -402,7 +381,7 @@ function BajaMedioPago() {
 function MostrarIconoTarjeta() {
     // obtengo primer digito para setear la imagen de la tarjeta
     $("#nroTarjeta").on("input", function () {
-        var nro = document.getElementById("nroTarjeta").value;
+        var nro = $("#nroTarjeta").val();
         $("#logoTarjeta").attr("src", IconoTarjeta(nro));
     });
 }

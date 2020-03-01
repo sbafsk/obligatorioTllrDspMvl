@@ -37,7 +37,7 @@
 <body>
   <ons-page id="mainPage">
     <ons-splitter>
-      <ons-splitter-content id="contentLogin" page="login.html"></ons-splitter-content>
+      <ons-splitter-content id="contentLogin" page="appPage.html"></ons-splitter-content>
     </ons-splitter>
   </ons-page>
 
@@ -96,28 +96,15 @@
 
   <template id="appPage.html">
     <ons-splitter>
-      <!-- removed swipeable-->
+      <!-- removed swipeable -->
       <ons-splitter-side id="menu" side="left" width="220px" collapse>
         <ons-page>
           <ons-list>
-            <ons-list-item onclick="fn.load('home.html')" tappable>
-              Buscar Producto
-            </ons-list-item>
-            <ons-list-item onclick="fn.load('altaMedioPago.html')" tappable>
-              Agregar medio de pago
-            </ons-list-item>
-            <ons-list-item onclick="fn.load('bajaMedioPago.html')" tappable>
-              Eliminar medio de pago
-            </ons-list-item>
-            <ons-list-item onclick="fn.load('cargarSaldo.html')" tappable>
-              Cargar saldo
-            </ons-list-item>
-            <ons-list-item onclick="fn.load('historico.html')" tappable>
-              Ver historial
-            </ons-list-item>
-            <ons-list-item input-id="cerrarSession" onclick="fnLogin.loadLogin('login.html')" tappable>
-              Cerrar sesion
-            </ons-list-item>
+            <!-- home = buscarProducto -->
+            <ons-list-item onclick="fn.load('home.html')" tappable>Buscar Productos</ons-list-item>
+            <ons-list-item onclick="fn.load('misBusquedas.html')" tappable>Mis Busquedas</ons-list-item>
+            <ons-list-item onclick="fn.load('escanearProducto.html')" tappable>Escanear Prodcuto</ons-list-item>            
+            <ons-list-item input-id="cerrarSession" onclick="fnLogin.loadLogin('login.html')" tappable>Cerrar sesion</ons-list-item>
           </ons-list>
         </ons-page>
       </ons-splitter-side>
@@ -134,16 +121,29 @@
           </ons-toolbar-button>
         </div>
         <div class="center">
-          Seleccione un Monopatin
+          Busqueda de Productos
         </div>
       </ons-toolbar>
-      <div id="map">
+      <div style="text-align: center; margin-top: 30px;">
+
+        <p>
+          <ons-input type="text" input-id="productoInp" id="producto" modifier="underbar"
+            placeholder="Filtrar por nombre" float>
+          </ons-input>          
+        </p>
+
+        <p style="margin-top: 30px;">
+          <ons-button id="buscarProducto" onclick="BuscarProducto()">Mostrar Productos</ons-button>
+        </p>
+        <ons-list id="resultadoBusqueda">
+
+        </ons-list>
 
       </div>
     </ons-page>
   </template>
 
-  <template id="altaMedioPago.html">
+  <template id="misBusquedas.html">
     <ons-page>
       <ons-toolbar>
         <div class="left">
@@ -152,20 +152,19 @@
           </ons-toolbar-button>
         </div>
         <div class="center">
-          Alta Medio de Pago
+          Mis Busquedas
         </div>
       </ons-toolbar>
       <div style="text-align: center; margin-top: 30px;">
 
         <p>
-          <ons-input type="number" input-id="nroTarjeta" id="nroTarjeta" modifier="underbar"
-            placeholder="Numero de tarjeta" float>
-          </ons-input>
-          <img id="logoTarjeta" src="" alt="">
+          <ons-input type="text" input-id="prodcutoInp" id="prodcuto" modifier="underbar"
+            placeholder="Igrese Producto..." float>
+          </ons-input>          
         </p>
 
         <p style="margin-top: 30px;">
-          <ons-button id="AgregarMedioPago" onclick="AltaMedioPago()">Agregar</ons-button>
+          <ons-button id="buscarProducto" onclick="BuscarProducto()">Buscar</ons-button>
         </p>
 
       </div>
