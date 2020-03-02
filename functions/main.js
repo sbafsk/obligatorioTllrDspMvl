@@ -1,34 +1,87 @@
 /* FUNCIONES */
 
-// prueba creacion base de datos web
-var db;
 
+var db = null;
+var dbBusquedaID = 0;
 var map;
+sessionStorage.setItem("id", "123");
 
 $(document).ready(init);
 
-function OpenDataBase() {
-    db = openDatabase("TestDB", 1, "guardar test", 1024);
-};
-
 function init() {
-    OpenDataBase();
+    // creacion base de datos web
+    if(db === null){
+        db = openDatabase("tiendaOnlineDB","1.0","Tienda Online","2*1024*1024"); 
+        
+    } 
+    if(db!==null){
+        db.transaction(function (tx){
+            tx.executeSql("DROP TABLE IF EXISTS Busquedas");  
+            tx.executeSql("CREATE TABLE Busquedas (descripcion,fecha,id unique)");  
+        });
+    }
 };
 
+function GuardarBusqueda(){
+    
+    var desc = $("#descripcionImp").val()
 
+    if(desc === "") {
+        ons.notification.alert("Ingrese una descripcion."); 
+    } else {
+        if(guardarDatosBusqueda(desc)) {
+            ons.notification.alert("La busqueda fue guardada correctamente.");  
+        } else {
+            ons.notification.alert("Hubo un problema al intentar guardar la busqueda."); 
+        }
+    }
+    
+}
 
+function guardarDatosBusqueda(descripcion){
+    var fecha = new Date();
+   
+    try {
+        db.transaction(function (tx){
+            tx.executeSql("Insert into Busquedas values (?,?,?)",[descripcion,fecha.toLocaleString(),dbBusquedaID]);
+            dbBusquedaID++;
+        });
+        return true;
+    } catch (error) {
+        console.log(error.message);
+        return false;
+    }
+        
+    
+}
+
+function ListarDatos(){    
+    db.transaction(function (tx){
+        tx.executeSql("Select * from Busquedas where id=? order by fecha desc", [1], function (tx,results){
+            if(results.rows.length >0){
+                return results;
+                /*$.each(results.rows, function (i,value){
+                    alert(value.nombre);
+                    alert(value.apellido);
+                    alert(value.email);
+                })*/
+            }
+        })
+  
+    })
+};
 // funciones OnsenUI
 // manejo pantalla inicio - Login/Registrar
 window.fnLogin = {};
 
-window.fnLogin.loadLogin = function (page) {
+window.fnLogin.loadLogin = function (page) {       
+
     var content = $("#contentLogin")[0];               
     content.load(page);
     
 
-    // intente asignarle null, pero luego al valdar (id != null) siempre da true, JS es raro.
+    // intente asignarle null, pero luego al validar (id != null) siempre da true, JS es raro.
     if (sessionStorage.getItem("id") != "vacio") {
-        sessionStorage.setItem("token", "vacio");
         sessionStorage.setItem("id", "vacio");
         console.log("Se limpia el sessionStorage");
         console.log(sessionStorage.getItem("id"));
@@ -46,26 +99,30 @@ window.fn.open = function () {
 
 window.fn.load = function (page) {
 
-    var content = $("#content")[0];
-    var menu = $("#menu")[0];
-    content.load(page)
-        .then(menu.close.bind(menu));
-
-
-    switch (page) {   
-        case "home.html":
+    if (sessionStorage.getItem("id") === "vacio") {
+        ons.notification.alert("Debe iniciar session para navegar."); 
+    } else {
+        var content = $("#contentPage")[0];
+        var menu = $("#menu")[0];
+        content.load(page)
+            .then(menu.close.bind(menu));
+    
+    
+        switch (page) {   
+            case "home.html":
+                
+                break;     
+            case "misBusquedas.html":            
+                
+                break;
+            case "escanearProducto.html":
+                
+                break;
             
-            break;     
-        case "misBusquedas.html":            
-            
-            break;
-        case "escanearProducto.html":
-            
-            break;
-        
-        default:
-            break;
-    }
+            default:
+                break;
+        }
+    }   
 };
 
 
@@ -90,7 +147,8 @@ function Login() {
             dataType: "JSON", //tipo de dato de retorno
             data: JSON.stringify({ email: emailImpt, password: passwordImpt }),
             contentType: 'application/json',
-            success: function () {
+            success: function (json) {
+                sessionStorage.setItem("id", json._id);
                 var content = $("#contentLogin")[0];                
                 content.load("appPage.html");
 
@@ -181,28 +239,34 @@ function BuscarProducto() {
             contentType:'application/json',           
     
             success: function(response){              
-                var found = false;              
+                var found = false;  
+                if(response.length > 0) {
 
-                $.each(response,function(i,value){  
+                    $("#resultadoBusqueda").append(
+                        "<p style='margin-top: 30px;'> Guardar Busqueda <br>"                    
+                        +   "<ons-input type='text' input-id='descripcionImp' modifier='underbar' placeholder='Descripcion...' float></ons-input> "    
+                        +   "<ons-button id='guardarBusuqueda' onclick='GuardarBusqueda()'>Guardar</ons-button>"
+                        +"</p>");
 
-                    if(producto === "" || value.name.toUpperCase().includes(filtro.toUpperCase())) {  
+                    $.each(response,function(i,value){  
 
-                        var prod = "<ons-list modifier='inset' style='margin-bottom: 1vh'>"
-                            +"  <img src='"+value.photo+"' style='width: 100%'>" 
-                            +"  <ons-list-item><div class='center'><b>"+value.name+"</b></div></ons-list-item>"                         
-                            +"  <ons-list-item><div class='right'>$"+value.price+"</div></ons-list-item>"
-                            +"  <ons-list-item modifier='longdivider'>"+value.description+"</ons-list-item>"
-                            +"  <ons-list-item modifier='longdivider'>En "+value.branches.length+" sucursales.</ons-list-item>"
-                            +"</ons-list>"; 
-                        $("#resultadoBusqueda").append(prod);                  
-                        found = true;
-                    }
-                });
-
-                if(!found) {
+                        if(producto === "" || value.name.toUpperCase().includes(filtro.toUpperCase())) {  
+    
+                            var prod = "<ons-list modifier='inset' style='margin-bottom: 1vh'>"
+                                +"  <img src='"+value.photo+"' style='width: 100%'>" 
+                                +"  <ons-list-item modifier='longdivider'><div class='center'><b>"+value.name+"</b></div></ons-list-item>"                         
+                                +"  <ons-list-item modifier='longdivider'><div class='right'>$"+value.price+"</div></ons-list-item>"
+                                +"  <ons-list-item modifier='longdivider'>"+value.description+"</ons-list-item>"
+                                +"  <ons-list-item modifier='longdivider'>En "+value.branches.length+" sucursales."
+                                +"  <div class='right'><ons-button id='verMapa' onclick=\"fn.load('mapaSucursales.html')\" modifier='quiet'>Ver en Mapa</ons-button></div></ons-list-item>"
+                                +"</ons-list>"; 
+                            $("#resultadoBusqueda").append(prod);                  
+                            found = true;
+                        }
+                    });
+                } else {
                     ons.notification.alert("No se encontraron productos");
-                }
-
+                }   
             },            
             error: function(response) {
                 console.log("failConsultarProducots");
@@ -219,23 +283,58 @@ function BuscarProducto() {
 };
 
 
+
+
 function MostrarMapa() {
     console.log("MostrarMapa");
-    navigator.geolocation.getCurrentPosition(CrearMapa);
+    if(navigator.geolocation){
+        navigator.geolocation.getCurrentPosition(CrearMapa);
+    }
+}
+
+function CrearMapa(posActual,sucursales) {
+    console.log("CrearMapa");
+
+    longitudActual=posActual.coords.longitude;
+    latitudActual=posActual.coords.latitude;
+
+    map = L.map('map').setView([latitudActual, -longitudActual], 13);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+
+    L.marker([latitudActual,longitudActual]).addTo(map)
+        .bindPopup('Esta es mi posicion')
+        .openPopup();
+        cargarSucursales(sucursales);
 
 }
 
-function CrearMapa(pos) {
-    console.log("CrearMapa");
-    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-        attribution: "&copy; <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors"
-    }).addTo(map);
+function cargarSucursales(sucursales){
+   
+    $.each(sucursales,function(i,value){
+        var lugar = sucursales[i];
+        var contenido = "<p>El nombre del lugar es" + lugar.nombre+"<p><br><input type='button' onclick='mostrarRuta("+lugar.latitude+","+lugar.longitude+")'>";
+        
+        var latitud=lugar.latitude;
+        var longitud=lugar.longitude;
 
-    // ubicacion actual
-    //L.marker([pos.coords.latitude, pos.coords.longitude]).addTo(map)
-    //    .bindPopup("Mi ubicacion.")
-    //    .openPopup();
+        L.marker([latitud,longitud]).addTo(map)
+        .bindPopup(contenido)
+        .openPopup();
+    })
 
+}
+
+function mostrarRuta(latitude,longitude){
+    L.Routing.control({
+        waypoints: [
+          L.latLng(latitudActual,longitudActual),
+          L.latLng(latitude, longitude)
+        ]
+      }).addTo(map);
+ 
 }
 
 function CentrarMapa(lat, lon) {
@@ -331,184 +430,3 @@ function VentanaMonopatin(monopatin) {
 
     return ventana;
 }
-
-
-
-
-
-
-
-
-
-
-
-function BajaMedioPago() {
-
-    ons.notification.confirm({
-        message: "Desea eliminar su medio de pago?",
-        callback: function (answer) {
-            if (answer) {
-                var settings = {
-                    "url": "http://oransh.develotion.com/tarjetas.php",
-                    "method": "DELETE",
-                    "timeout": 0,
-                    "headers": {
-                        "token": sessionStorage.getItem("token"),
-                        "Content-Type": "application/x-www-form-urlencoded"
-                    },
-                    "data": {
-                        "id": sessionStorage.getItem("id")
-                    }
-                };
-
-                $.ajax(settings)
-                    .done(function (response) {
-                        console.log("doneBaja");
-                        console.log(response.mensaje);
-                        MostrarNumeroTarjeta("Tarjeta eliminada")
-                        ons.notification.alert(response.mensaje);
-                    })
-
-                    .fail(function (response) {
-                        console.log("failBaja");
-                        console.log(response);
-                    });
-            };
-        }
-    });
-};
-
-function MostrarIconoTarjeta() {
-    // obtengo primer digito para setear la imagen de la tarjeta
-    $("#nroTarjeta").on("input", function () {
-        var nro = $("#nroTarjeta").val();
-        $("#logoTarjeta").attr("src", IconoTarjeta(nro));
-    });
-}
-
-function IconoTarjeta(nro) {
-    var src = "";
-    if (nro.charAt(0) == "4") {
-        src = "../img/visa-icon.png";
-    } else if (nro.charAt(0) == "5") {
-        src = "../img/master-icon.png";
-    }
-    return src;
-};
-
-
-function MostrarNumeroTarjeta(nro) {
-
-    $("#nroTarjeta").val(nro);
-
-    $("#nroTarjeta").prop("disabled", true);
-
-    $("#AgregarMedioPago").prop("disabled", true);
-
-    $("#EliminarMedioPago").prop("disabled", false);
-
-    $("#logoTarjeta").attr("src", IconoTarjeta(nro));
-
-    // valido si recibo un mensaje y no el nro de tarjeta.
-    if (nro.includes("arjeta")) {
-        $("#EliminarMedioPago").prop("disabled", true)
-    }
-}
-
-
-function ObtenerSaldo(option) {
-    var settings = {
-        "url": "http://oransh.develotion.com/tarjetas.php",
-        "method": "GET",
-        "timeout": 0,
-        "headers": {
-            "token": sessionStorage.getItem("token"),
-            "Content-Type": "application/x-www-form-urlencoded"
-        },
-        "data": {
-            "id": sessionStorage.getItem("id")
-        }
-    };
-
-    $.ajax(settings)
-        .done(function (response) {
-            console.log("doneGet");
-            console.log(response);
-            switch (option) {
-                case "alta":
-                    MostrarNumeroTarjeta(response.numero);
-                    ons.notification.alert("Ya cuenta con un medio de pago.");
-                    break;
-                case "baja":
-                    MostrarNumeroTarjeta(response.numero);
-                    break;
-                case "cargar":
-                    $("#saldoActual").val(response.saldo);
-                    break;
-                default:
-                    break;
-            }
-
-
-        })
-        .fail(function (response) {
-            console.log("failGet");
-            console.log(response.responseJSON.mensaje);
-            switch (option) {
-                case "baja":
-                    MostrarNumeroTarjeta(response.responseJSON.mensaje);
-                    break;
-                case "cargar":
-                    $("#AgregarSaldo").prop("disabled", true);
-                    ons.notification.alert(response.responseJSON.mensaje);
-                    break;
-                default:
-                    break;
-            }
-        });
-}
-
-
-function ModificarSaldo() {
-
-    var saldo = $("#saldoModificar").val();
-
-    if (saldo > 0 && saldo % 100 == 0) {
-        var settings = {
-            "url": "http://oransh.develotion.com/tarjetas.php",
-            "method": "PUT",
-            "timeout": 0,
-            "headers": {
-                "token": sessionStorage.getItem("token"),
-                "Content-Type": "application/x-www-form-urlencoded"
-            },
-            "data": {
-                "id": sessionStorage.getItem("id"),
-                "saldo": saldo
-            }
-        };
-
-        $.ajax(settings)
-            .done(function (response) {
-                console.log("donePut");
-                console.log(response);
-                $("#saldoActual").val(response.saldo);
-                $("#saldoModificar").val("");
-                ons.notification.alert(response.mensaje);
-            })
-            .fail(function (response) {
-                console.log("failPut");
-                console.log(response.responseJSON.mensaje);
-
-            });
-    } else {
-        ons.notification.alert("El monto debe ser multiplo de 100.");
-    }
-
-}
-
-
-
-
-
-

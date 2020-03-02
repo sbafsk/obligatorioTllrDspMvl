@@ -41,6 +41,7 @@
     </ons-splitter>
   </ons-page>
 
+  <!-- LOGIN -->
   <template id="login.html">
     <ons-page>
       <div style="text-align: center; margin-top: 30px;">
@@ -67,6 +68,7 @@
     </ons-page>
   </template>
 
+  <!-- REGISTRO -->
   <template id="registrar.html">
     <ons-page>
       <div style="text-align: center; margin-top: 30px;">
@@ -94,6 +96,7 @@
     </ons-page>
   </template>
 
+  <!-- APP PAGE -->
   <template id="appPage.html">
     <ons-splitter>
       <!-- removed swipeable -->
@@ -108,10 +111,11 @@
           </ons-list>
         </ons-page>
       </ons-splitter-side>
-      <ons-splitter-content id="content" page="home.html"></ons-splitter-content>
+      <ons-splitter-content id="contentPage" page="home.html"></ons-splitter-content>
     </ons-splitter>
   </template>
 
+  <!-- HOME BUSCAR PRODUCTO -->
   <template id="home.html">
     <ons-page>
       <ons-toolbar>
@@ -135,14 +139,15 @@
         <p style="margin-top: 30px;">
           <ons-button id="buscarProducto" onclick="BuscarProducto()">Mostrar Productos</ons-button>
         </p>
-        <ons-list id="resultadoBusqueda">
-
-        </ons-list>
+        <div id="resultadoBusqueda">
+          
+        </div>
 
       </div>
     </ons-page>
   </template>
 
+  <!-- MIS BUSQUEDAS -->
   <template id="misBusquedas.html">
     <ons-page>
       <ons-toolbar>
@@ -157,21 +162,13 @@
       </ons-toolbar>
       <div style="text-align: center; margin-top: 30px;">
 
-        <p>
-          <ons-input type="text" input-id="prodcutoInp" id="prodcuto" modifier="underbar"
-            placeholder="Igrese Producto..." float>
-          </ons-input>          
-        </p>
-
-        <p style="margin-top: 30px;">
-          <ons-button id="buscarProducto" onclick="BuscarProducto()">Buscar</ons-button>
-        </p>
+        
 
       </div>
     </ons-page>
   </template>
 
-  <template id="bajaMedioPago.html">
+  <template id="escanearProducto.html">
     <ons-page>
       <ons-toolbar>
         <div class="left">
@@ -180,25 +177,18 @@
           </ons-toolbar-button>
         </div>
         <div class="center">
-          Baja Medio de Pago
+          Escanear Producto
         </div>
       </ons-toolbar>
       <div style="text-align: center; margin-top: 30px;">
 
-        <p>
-          <ons-input type="text" input-id="nroTarjeta" placeholder="" value="" disabled float> </ons-input>
-          <img id="logoTarjeta" src="" alt="">
-        </p>
-
-        <p style="margin-top: 30px;">
-          <ons-button id="EliminarMedioPago" onclick="BajaMedioPago()" disabled>Eliminar</ons-button>
-        </p>
+        
 
       </div>
     </ons-page>
-  </template>
+  </template>  
 
-  <template id="cargarSaldo.html">
+  <template id="mapaSucursales.html">
     <ons-page>
       <ons-toolbar>
         <div class="left">
@@ -207,43 +197,13 @@
           </ons-toolbar-button>
         </div>
         <div class="center">
-          Cargar Saldo
+          Sucursales
         </div>
       </ons-toolbar>
-      <div style="text-align: center; margin-top: 50px;">
-        <p>
-          $<ons-input type="numer" id="saldoActual" modifier="underbar" placeholder="Saldo Actual" float disable>
-          </ons-input>
-        </p>
-      </div>
-      <br>
-      <hr>
-      <div style="text-align: center; margin-top: 40px;">
-        <p>
-          <ons-input type="numer" id="saldoModificar" modifier="underbar" placeholder="Ingrese un monto" float>
-          </ons-input>
-        </p>
-        <p style="margin-top: 30px;">
-          <ons-button id="AgregarSaldo" onclick="ModificarSaldo()">Agregar Saldo</ons-button>
-        </p>
-      </div>
-    </ons-page>
-  </template>
-
-  <template id="historico.html">
-    <ons-page>
-      <ons-toolbar>
-        <div class="left">
-          <ons-toolbar-button onclick="fn.open()">
-            <ons-icon icon="md-menu"></ons-icon>
-          </ons-toolbar-button>
-        </div>
-        <div class="center">
-          Historico de viajes
-        </div>
-      </ons-toolbar>
+      <ons-button id="volver" onclick="fn.load('home.html')" modifier='quiet'>Volver ...</ons-button>
+      
       <div id="map">
-        historico de viajes
+        
       </div>
     </ons-page>
   </template>
