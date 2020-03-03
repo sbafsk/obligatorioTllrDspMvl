@@ -106,8 +106,9 @@
             <!-- home = buscarProducto -->
             <ons-list-item onclick="fn.load('home.html')" tappable>Buscar Productos</ons-list-item>
             <ons-list-item onclick="fn.load('misBusquedas.html')" tappable>Mis Busquedas</ons-list-item>
-            <ons-list-item onclick="fn.load('escanearProducto.html')" tappable>Escanear Prodcuto</ons-list-item>            
-            <ons-list-item input-id="cerrarSession" onclick="fnLogin.loadLogin('login.html')" tappable>Cerrar sesion</ons-list-item>
+            <ons-list-item onclick="fn.load('escanearProducto.html')" tappable>Escanear Prodcuto</ons-list-item>
+            <ons-list-item input-id="cerrarSession" onclick="fnLogin.loadLogin('login.html')" tappable>Cerrar sesion
+            </ons-list-item>
           </ons-list>
         </ons-page>
       </ons-splitter-side>
@@ -133,14 +134,14 @@
         <p>
           <ons-input type="text" input-id="productoInp" id="producto" modifier="underbar"
             placeholder="Filtrar por nombre" float>
-          </ons-input>          
+          </ons-input>
         </p>
 
         <p style="margin-top: 30px;">
           <ons-button id="buscarProducto" onclick="BuscarProducto()">Mostrar Productos</ons-button>
         </p>
         <div id="resultadoBusqueda">
-          
+
         </div>
 
       </div>
@@ -162,7 +163,7 @@
       </ons-toolbar>
       <div style="text-align: center; margin-top: 30px;">
 
-        
+
 
       </div>
     </ons-page>
@@ -182,14 +183,25 @@
       </ons-toolbar>
       <div style="text-align: center; margin-top: 30px;">
 
-        
+
 
       </div>
     </ons-page>
-  </template>  
+  </template>
 
   <template id="mapaSucursales.html">
-    <ons-page>
+    <ons-page id='mapa'>
+      <style>
+          body {
+              padding: 0;
+              margin: 0;
+          }
+
+          html, body, #map {
+              height: 100%;
+              width: 100%;
+          }
+      </style>      
       <ons-toolbar>
         <div class="left">
           <ons-toolbar-button onclick="fn.open()">
@@ -201,9 +213,9 @@
         </div>
       </ons-toolbar>
       <ons-button id="volver" onclick="fn.load('home.html')" modifier='quiet'>Volver ...</ons-button>
-      
+
       <div id="map">
-        
+
       </div>
     </ons-page>
   </template>
