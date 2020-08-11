@@ -7,12 +7,12 @@ var map;
 
 $(document).ready(init);
 
-function OpenDataBase() {
-    db = openDatabase("TestDB", 1, "guardar test", 1024);
-};
+//function OpenDataBase() {
+//   db = openDatabase("TestDB", 1, "guardar test", 1024);
+//};
 
 function init() {
-    OpenDataBase();
+    //OpenDataBase();
 };
 
 
@@ -22,10 +22,10 @@ function init() {
 window.fnLogin = {};
 
 window.fnLogin.loadLogin = function (page) {
-    var content = document.getElementById("contentLogin");
+    var content = $("#contentLogin");
     content.load(page);
 
-    // intente asignarle null, pero luego al valdar (id != null) siempre da true, JS es raro.
+    // intente asignarle null, pero luego al validar (id != null) siempre da true.
     if (sessionStorage.getItem("id") != "vacio") {
         sessionStorage.setItem("token", "vacio");
         sessionStorage.setItem("id", "vacio");
@@ -35,18 +35,18 @@ window.fnLogin.loadLogin = function (page) {
 };
 
 
-// manejo pantalla principal Mapa/AB medio pago/cargar saldo
+// manejo pantalla principal Mapa/AyB medio pago/Cargar saldo
 window.fn = {};
 
 window.fn.open = function () {
-    var menu = document.getElementById("menu");
+    var menu = $("#menu");
     menu.open();
 };
 
 window.fn.load = function (page) {
 
-    var content = document.getElementById("content");
-    var menu = document.getElementById("menu");
+    var content = $("#content");
+    var menu = $("#menu");
     content.load(page)
         .then(menu.close.bind(menu));
 
@@ -75,22 +75,18 @@ window.fn.load = function (page) {
 // funcion de Login
 function Login() {
     // obtengo los valores del form
-    var username = document.getElementById("username").value;
-    var password = document.getElementById("password").value;
+    var username = $("#username").value;
+    var password = $("#password").value;
 
     // valido que los campos tengan valores
     if (username != "" && password != "") {
         var settings = {
-            "url": "http://oransh.develotion.com/login.php",
-            "method": "POST",
-            "timeout": 0,
-            "headers": {
-                "Content-Type": "application/x-www-form-urlencoded"
-            },
-            "data": {
-                "usuario": username,
-                "password": password
-            }
+            url: "tiendanatural2020.herokuapp.com/api/user/login",
+            method: "POST",
+            datatype: "JSON",
+            timeout: 0,
+            ContentType: 'application/json',            
+            data: {email: username, password: password}
         };
 
         $.ajax(settings)
@@ -99,19 +95,25 @@ function Login() {
                 sessionStorage.setItem("token", response.token);
                 sessionStorage.setItem("id", response.id);
 
-                var content = document.getElementById("contentLogin");
-                content.load("appPage.html");
-                ConsultarMonopatines();
+                //var content = $("#contentLogin");
+                //content.load("appPage.html");
+                //ConsultarMonopatines();
 
             })
-
-            .fail(function (response) {
-                console.log("failLogin");
-                console.log(response.responseJSON.mensaje);
-                ons.notification.alert(response.responseJSON.mensaje);
+            .fail(function (response) { 
+                console.log(response);  
+                console.log(response.status);
+                if(response.status == 401){
+                    console.log(response.name + " - Invalid username/password supplied");                
+                    ons.notification.alert(response.name + " - Invalid username/password supplied");
+                } else {
+                    console.log("failLogin");                
+                    console.log(response.responseJSON.name);
+                    //ons.notification.alert(response.name);
+                }
             });
     } else {
-        ons.notification.alert("Los campos no pueden quedar en blanco.");
+        ons.notification.alert("Por favor, ingrese email y contraseña.");
     }
 };
 
@@ -119,23 +121,23 @@ function Login() {
 // funcion registro 
 function Registrar() {
     // obtengo los valores del form
-    var username = document.getElementById("username").value;
-    var password = document.getElementById("password").value;
-    var confPassword = document.getElementById("confPassword").value;
+    var username = $("#username").value;
+    var password = $("#password").value;
+    var confPassword = $("#confPassword").value;
 
     // valido que los campos tengan valores
     if (username != "" && password != "" && confPassword != "") {
 
         if (password === confPassword) {
             var settings = {
-                "url": "http://oransh.develotion.com/usuarios.php",
+                "url": "tiendanatural2020.herokuapp.com/api/user/register/",
                 "method": "POST",
                 "timeout": 0,
                 "headers": {
                     "Content-Type": "application/x-www-form-urlencoded"
                 },
                 "data": {
-                    "usuario": username,
+                    "email": username,
                     "password": password
                 }
             };
@@ -144,14 +146,14 @@ function Registrar() {
                 .done(function (response) {
                     console.log("doneReg");
                     ons.notification.alert("Registro con Exito<br>Ahora puedes ingresar");
-                    var contentLogin = document.getElementById("contentLogin");
+                    var contentLogin = $("#contentLogin");
                     contentLogin.load("login.html");
                 })
 
                 .fail(function (response) {
                     console.log("failReg");
-                    console.log(response.responseJSON.mensaje);
-                    ons.notification.alert(response.responseJSON.mensaje);
+                    //console.log(response.responseJSON.mensaje);
+                    //ons.notification.alert(response.responseJSON.mensaje);
                 });
         } else {
             ons.notification.alert("Las contraseñas deben ser identicas.");
@@ -224,12 +226,14 @@ function MostrarMonopatines(response) {
 
     CentrarMapa(myLat, myLon);    
 
+    // obtengo distancias
     response.monopatines.forEach(mp => {
         distancias.push(FormulaHaversine([mp.latitud, mp.longitud], [myLat, myLon], mp.codigo));
     });
 
     distancias.sort();    
 
+    // obtengo los 5 mas cercanos
     for (let i = 0; i < 5; i++) {
         response.monopatines.forEach(mp => {
             if (mp.codigo == distancias[i][1]) {
@@ -298,12 +302,19 @@ function VentanaMonopatin(monopatin) {
 
 
 function DesbloquearMonopatin() {
-
+    // TO-DO    
+    // validar saldo [salta si no tiene tarjeta]
+    // modificar ventana monopatin    
+    // setear monopatin en uso [manejar con sessionStorage?]
 
 }
 
 function BloquearMonopatin() {
-
+    // TO-DO
+    // finalizar calculo de costo
+    // restar saldo
+    // setear monopatin como libre [manejar con sessionStorage?]
+    // guardar registro para historial
 }
 
 
@@ -312,7 +323,7 @@ function BloquearMonopatin() {
 
 // alta medio de pago
 function AltaMedioPago() {
-    // var nroTarjeta = document.getElementById("nroTarjeta").value;
+    // var nroTarjeta = $("#nroTarjeta").value;
     var nroTarjeta = $("#nroTarjeta").val();
     // el numero de la tarjeta deben ser 16 digitos
     if (nroTarjeta.length == 16) {
@@ -390,7 +401,7 @@ function BajaMedioPago() {
 function MostrarIconoTarjeta() {
     // obtengo primer digito para setear la imagen de la tarjeta
     $("#nroTarjeta").on("input", function () {
-        var nro = document.getElementById("nroTarjeta").value;
+        var nro = $("#nroTarjeta").value;
         $("#logoTarjeta").attr("src", IconoTarjeta(nro));
     });
 }
