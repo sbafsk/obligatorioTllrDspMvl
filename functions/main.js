@@ -22,13 +22,9 @@ function init() {
 window.fnLogin = {};
 
 window.fnLogin.loadLogin = function (page) {
-<<<<<<< HEAD
-    var content = $("#contentLogin");
-=======
-    var content = $("#contentLogin")[0];               
->>>>>>> f883bda61a1dec585e64ce0bbb35e81ffd652ed1
+    var content = $("#contentLogin")[0];
     content.load(page);
-    
+
 
     // intente asignarle null, pero luego al validar (id != null) siempre da true.
     if (sessionStorage.getItem("id") != "vacio") {
@@ -40,70 +36,46 @@ window.fnLogin.loadLogin = function (page) {
 };
 
 
-<<<<<<< HEAD
-// manejo pantalla principal Mapa/AyB medio pago/Cargar saldo
-window.fn = {};
-
-window.fn.open = function () {
-    var menu = $("#menu");
-=======
 // manejo pantalla principal - Mapa/AB medio pago/cargar saldo
 window.fn = {};
 
-window.fn.open = function () {    
+window.fn.open = function () {
     var menu = $("#menu")[0];
->>>>>>> f883bda61a1dec585e64ce0bbb35e81ffd652ed1
     menu.open();
 };
 
 window.fn.load = function (page) {
 
-<<<<<<< HEAD
-    var content = $("#content");
-    var menu = $("#menu");
-=======
     var content = $("#content")[0];
     var menu = $("#menu")[0];
->>>>>>> f883bda61a1dec585e64ce0bbb35e81ffd652ed1
     content.load(page)
         .then(menu.close.bind(menu));
 
 
-    switch (page) {   
+    switch (page) {
         case "home.html":
-            
-            break;     
-        case "misBusquedas.html":            
-            
+
+            break;
+        case "misBusquedas.html":
+
             break;
         case "escanearProducto.html":
-            
+
             break;
-        
+
         default:
             break;
     }
 };
 
+function editSelects(event) {       
+    document.getElementById('choose-sel').setAttribute('modifier', event.target.value);
+    
+}
 
 // funcion de Login
 function Login() {
     // obtengo los valores del form
-<<<<<<< HEAD
-    var username = $("#username").value;
-    var password = $("#password").value;
-
-    // valido que los campos tengan valores
-    if (username != "" && password != "") {
-        var settings = {
-            url: "tiendanatural2020.herokuapp.com/api/user/login",
-            method: "POST",
-            datatype: "JSON",
-            timeout: 0,
-            ContentType: 'application/json',            
-            data: {email: username, password: password}
-        };
-=======
     var emailImpt = $("#email").val();
     var passwordImpt = $("#password").val();
     try {
@@ -114,30 +86,8 @@ function Login() {
         if (passwordImpt === "") {
             throw new Error("La contraseña no puede estar vacio");
         }
->>>>>>> f883bda61a1dec585e64ce0bbb35e81ffd652ed1
 
 
-<<<<<<< HEAD
-                //var content = $("#contentLogin");
-                //content.load("appPage.html");
-                //ConsultarMonopatines();
-
-            })
-            .fail(function (response) { 
-                console.log(response);  
-                console.log(response.status);
-                if(response.status == 401){
-                    console.log(response.name + " - Invalid username/password supplied");                
-                    ons.notification.alert(response.name + " - Invalid username/password supplied");
-                } else {
-                    console.log("failLogin");                
-                    console.log(response.responseJSON.name);
-                    //ons.notification.alert(response.name);
-                }
-            });
-    } else {
-        ons.notification.alert("Por favor, ingrese email y contraseña.");
-=======
         $.ajax({
             url: "https://tiendanatural2020.herokuapp.com/api/user/login",
             type: "POST", //forma de envio de datos 
@@ -145,170 +95,136 @@ function Login() {
             data: JSON.stringify({ email: emailImpt, password: passwordImpt }),
             contentType: 'application/json',
             success: function () {
-                var content = $("#contentLogin")[0];                
+                var content = $("#contentLogin");
                 content.load("appPage.html");
 
             },
-            error: function (json) {               
-                console.log(json.responseJSON.name);   
-                ons.notification.alert(json.responseJSON.name + " : <br> Verifique mail y contraseña."); 
+            error: function (json) {
+                console.log(json.responseJSON.name);
+                ons.notification.alert(json.responseJSON.name + " : <br> Verifique mail y contraseña.");
             }
         });
 
     } catch (e) {
         alert(e.message);
->>>>>>> f883bda61a1dec585e64ce0bbb35e81ffd652ed1
     }
-   
+
 };
 
 
 // funcion registro 
 function Registrar() {
-    // obtengo los valores del form
-<<<<<<< HEAD
-    var username = $("#username").value;
-    var password = $("#password").value;
-    var confPassword = $("#confPassword").value;
-
-    // valido que los campos tengan valores
-    if (username != "" && password != "" && confPassword != "") {
-
-        if (password === confPassword) {
-            var settings = {
-                "url": "tiendanatural2020.herokuapp.com/api/user/register/",
-                "method": "POST",
-                "timeout": 0,
-                "headers": {
-                    "Content-Type": "application/x-www-form-urlencoded"
-                },
-                "data": {
-                    "email": username,
-                    "password": password
-                }
-            };
-
-            $.ajax(settings)
-                .done(function (response) {
-                    console.log("doneReg");
-                    ons.notification.alert("Registro con Exito<br>Ahora puedes ingresar");
-                    var contentLogin = $("#contentLogin");
-                    contentLogin.load("login.html");
-                })
-
-                .fail(function (response) {
-                    console.log("failReg");
-                    //console.log(response.responseJSON.mensaje);
-                    //ons.notification.alert(response.responseJSON.mensaje);
-                });
-        } else {
-            ons.notification.alert("Las contraseñas deben ser identicas.");
-=======
-    var emailImpt = $("#email").val();
-    var passwordImpt = $("#password").val();
-    var confPassword = $("#confPassword").val();
+    
+    var name = $("#r_name").val();
+    var lName = $("#r_lName").val();
+    var gen = $("#r_gen").val();
+    var email = $("#r_email").val();
+    var doc = $("#r_doc").val();
+    var tel = $("#r_tel").val();
+    var pass = $("#r_pass").val();
+    var c_pass = $("#r_confPass").val();
 
     try {
-        if (emailImpt === "") {
-            throw new Error("El email no puede estar vacio");
->>>>>>> f883bda61a1dec585e64ce0bbb35e81ffd652ed1
-        }
-        if (passwordImpt === "") {
-            throw new Error("La contraseña no puede estar vacio");
-        }
-        if (confPassword === "") {
-            throw new Error("La confirmacion de contraseña no puede estar vacio");
-        }
-        if (passwordImpt != confPassword) {
+        
+        if (pass != c_pass) {
             throw new Error("Las contraseñas debe coincidir");
         }
+        // Validar que email, documento y teléfono del usuario no exista en el proceso de registro.
+        // Validar documento solo dígitos sin guiones.
+        // Validar formato de email.
         
-        var datos = { email: emailImpt, password: passwordImpt }
+        var datos = {
+            "telefono": tel,
+            "email":email,
+            "contrasenia": pass,
+            "genero": gen,
+            "apellido": name,
+            "nombre": lName,
+            "documento": doc
+        }
 
         $.ajax({
-            url: "https://tiendanatural2020.herokuapp.com/api/user/register",
-            type: "POST", //forma de envio de datos 
-            dataType: "JSON", //tipo de dato de retorno
+            url: "https://ort-api.herokuapp.com/usuarios/registro",
+            type: "POST",  
+            dataType: "JSON", 
             data: JSON.stringify(datos),
             contentType: 'application/json',
-            success: function () {  
-                ons.notification.alert("Registro con Exito<br>Ahora puedes ingresar");
-                var contentLogin = $("#contentLogin")[0];
-                contentLogin.load("login.html");
+            success: function () {
+                ons.notification.alert("Registro con Exito");
+                var content = $("#contentLogin");
+                content.load("appPage.html");
             },
             error: function (json) {
                 var jR = json.responseJSON;
                 console.log(jR);
-                if(jR.reason) {
-                    console.log(jR.reason); 
-                    ons.notification.alert(jR.reason);  
+                if (jR.error) {
+                    console.log(jR.error);
+                    ons.notification.alert(jR.error);
                 } else {
-                    console.log(jR.data.error.errors.email.message); 
-                    ons.notification.alert(jR.data.error.errors.email.message); 
+                    console.log("Error en el registro");
+                    ons.notification.alert("Error en el registro");
                 }
-                      
-
             }
         });
 
     } catch (error) {
         ons.notification.alert(error.message);
     }
-   
+
 };
 
 // buscar producto
 function BuscarProducto() {
-    
-    var filtro = $("#productoInp").val(); 
-    $("#resultadoBusqueda").html(""); 
-    
-    try{        
 
-        $.ajax({        
-            url:"http://tiendanatural2020.herokuapp.com/api/product/all",
-    
-            type:"GET",
-    
-            dataType:"Json",
-    
-            contentType:'application/json',           
-    
-            success: function(response){              
-                var found = false;              
+    var filtro = $("#productoInp").val();
+    $("#resultadoBusqueda").html("");
 
-                $.each(response,function(i,value){  
+    try {
 
-                    if(producto === "" || value.name.toUpperCase().includes(filtro.toUpperCase())) {  
+        $.ajax({
+            url: "http://tiendanatural2020.herokuapp.com/api/product/all",
+
+            type: "GET",
+
+            dataType: "Json",
+
+            contentType: 'application/json',
+
+            success: function (response) {
+                var found = false;
+
+                $.each(response, function (i, value) {
+
+                    if (producto === "" || value.name.toUpperCase().includes(filtro.toUpperCase())) {
 
                         var prod = "<ons-list modifier='inset' style='margin-bottom: 1vh'>"
-                            +"  <img src='"+value.photo+"' style='width: 100%'>" 
-                            +"  <ons-list-item><div class='center'><b>"+value.name+"</b></div></ons-list-item>"                         
-                            +"  <ons-list-item><div class='right'>$"+value.price+"</div></ons-list-item>"
-                            +"  <ons-list-item modifier='longdivider'>"+value.description+"</ons-list-item>"
-                            +"  <ons-list-item modifier='longdivider'>En "+value.branches.length+" sucursales.</ons-list-item>"
-                            +"</ons-list>"; 
-                        $("#resultadoBusqueda").append(prod);                  
+                            + "  <img src='" + value.photo + "' style='width: 100%'>"
+                            + "  <ons-list-item><div class='center'><b>" + value.name + "</b></div></ons-list-item>"
+                            + "  <ons-list-item><div class='right'>$" + value.price + "</div></ons-list-item>"
+                            + "  <ons-list-item modifier='longdivider'>" + value.description + "</ons-list-item>"
+                            + "  <ons-list-item modifier='longdivider'>En " + value.branches.length + " sucursales.</ons-list-item>"
+                            + "</ons-list>";
+                        $("#resultadoBusqueda").append(prod);
                         found = true;
                     }
                 });
 
-                if(!found) {
+                if (!found) {
                     ons.notification.alert("No se encontraron productos");
                 }
 
-            },            
-            error: function(response) {
+            },
+            error: function (response) {
                 console.log("failConsultarProducots");
                 console.log(response.mensaje);
                 ons.notification.alert("Hubo un problema para acceder al listado de productos.");
             }
         })
-        
+
 
     } catch (error) {
         ons.notification.alert(error.message);
-    }    
+    }
 
 };
 
@@ -350,14 +266,14 @@ function MostrarMonopatines(response) {
     var monopatinesCercanos = [];
     var distancias = [];
 
-    CentrarMapa(myLat, myLon);    
+    CentrarMapa(myLat, myLon);
 
     // obtengo distancias
     response.monopatines.forEach(mp => {
         distancias.push(FormulaHaversine([mp.latitud, mp.longitud], [myLat, myLon], mp.codigo));
     });
 
-    distancias.sort();    
+    distancias.sort();
 
     // obtengo los 5 mas cercanos
     for (let i = 0; i < 5; i++) {
@@ -365,7 +281,7 @@ function MostrarMonopatines(response) {
             if (mp.codigo == distancias[i][1]) {
                 monopatinesCercanos.push(mp);
             };
-        });        
+        });
     };
 
     console.log(monopatinesCercanos);
@@ -415,7 +331,7 @@ function FormulaHaversine(coords1, coords2, cod) {
     var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     var d = R * c;
 
-    return [d,cod];
+    return [d, cod];
 }
 
 function VentanaMonopatin(monopatin) {
@@ -427,7 +343,6 @@ function VentanaMonopatin(monopatin) {
 }
 
 
-<<<<<<< HEAD
 function DesbloquearMonopatin() {
     // TO-DO    
     // validar saldo [salta si no tiene tarjeta]
@@ -443,16 +358,11 @@ function BloquearMonopatin() {
     // setear monopatin como libre [manejar con sessionStorage?]
     // guardar registro para historial
 }
-=======
-
-
->>>>>>> f883bda61a1dec585e64ce0bbb35e81ffd652ed1
 
 
 
 
 
-<<<<<<< HEAD
 // alta medio de pago
 function AltaMedioPago() {
     // var nroTarjeta = $("#nroTarjeta").value;
@@ -492,8 +402,6 @@ function AltaMedioPago() {
     }
 
 };
-=======
->>>>>>> f883bda61a1dec585e64ce0bbb35e81ffd652ed1
 
 
 function BajaMedioPago() {
@@ -535,11 +443,7 @@ function BajaMedioPago() {
 function MostrarIconoTarjeta() {
     // obtengo primer digito para setear la imagen de la tarjeta
     $("#nroTarjeta").on("input", function () {
-<<<<<<< HEAD
-        var nro = $("#nroTarjeta").value;
-=======
         var nro = $("#nroTarjeta").val();
->>>>>>> f883bda61a1dec585e64ce0bbb35e81ffd652ed1
         $("#logoTarjeta").attr("src", IconoTarjeta(nro));
     });
 }

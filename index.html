@@ -35,12 +35,17 @@
 <body>
   <ons-page id="mainPage">
     <ons-splitter>
-      <ons-splitter-content id="contentLogin" page="appPage.html"></ons-splitter-content>
+      <ons-splitter-content id="contentLogin" page="registrar.html"></ons-splitter-content>
     </ons-splitter>
   </ons-page>
 
   <template id="login.html">
     <ons-page>
+      <ons-toolbar>        
+        <div class="center">
+          Login
+        </div>
+      </ons-toolbar>
       <div style="text-align: center; margin-top: 30px;">
         <p>
           <ons-input id="email" modifier="underbar" placeholder="Email" float></ons-input>
@@ -48,6 +53,10 @@
         <p>
           <ons-input id="password" modifier="underbar" type="password" placeholder="Contraseña" float></ons-input>
         </p>
+        <ons-select id="choose-sel" onchange="editSelects(event)">          
+          <option value="U">Usuario</option>
+          <option value="M">Medico</option>
+        </ons-select>
         <p style="margin-top: 30px;">
           <ons-button onclick="Login()">Ingresar</ons-button>
         </p>
@@ -67,16 +76,37 @@
 
   <template id="registrar.html">
     <ons-page>
+      <ons-toolbar>        
+        <div class="center">
+          Registro
+        </div>
+      </ons-toolbar>
       <div style="text-align: center; margin-top: 30px;">
         <p>
-          <ons-input id="email" modifier="underbar" placeholder="Email" float></ons-input>
+          <ons-input id="r_name" modifier="underbar" placeholder="Nombre" float></ons-input>
         </p>
         <p>
-          <ons-input id="password" modifier="underbar" type="password" placeholder="Contraseña" float></ons-input>
+          <ons-input id="r_lName" modifier="underbar" placeholder="Apellido" float></ons-input>
+        </p>
+        <ons-select id="r_gen" onchange="editSelects(event)">          
+          <option value="M">Masculino</option>
+          <option value="F">Femenino</option>
+          <option value="O">Otro</option>
+        </ons-select>        
+        <p>
+          <ons-input id="r_email" modifier="underbar" placeholder="Email" float></ons-input>
         </p>
         <p>
-          <ons-input id="confPassword" modifier="underbar" type="password" placeholder="Confirmar contraseña" float>
-          </ons-input>
+          <ons-input id="r_doc" modifier="underbar" placeholder="Documento" float></ons-input>
+        </p>
+        <p>
+          <ons-input id="r_tel" modifier="underbar" placeholder="Telefono" float></ons-input>
+        </p>
+        <p>
+          <ons-input id="r_pass" modifier="underbar" type="password" placeholder="Contraseña" float></ons-input>
+        </p>
+        <p>
+          <ons-input id="r_confPass" modifier="underbar" type="password" placeholder="Confirmar contraseña" float></ons-input>
         </p>
         <p style="margin-top: 30px;">
           <ons-button onclick="Registrar()">Registrar</ons-button>
