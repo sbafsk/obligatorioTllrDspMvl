@@ -1,0 +1,317 @@
+[
+    {
+       "branches":[
+          {
+             "_id":"5e40bf5697fef18946b150f7",
+             "name":"Antel Arena",
+             "latitude":-34.8633626,
+             "longitude":-56.1559832
+          },
+          {
+             "_id":"5e40bf5697fef18946b150f9",
+             "name":"Montevideo Beer Company",
+             "latitude":-34.9129234,
+             "longitude":-56.1575821
+          }
+       ],
+       "_id":"5e40c6d497fef18946b15127",
+       "name":"Mermelada de Arándanos",
+       "description":"Mermelada de arándanos cosechados en el Himalaya, recolectadas manualmente.",
+       "price":1000,
+       "photo":"http://tiendanatural2020.herokuapp.com/img/mermarandanos.jpg"
+    },
+    {
+       "branches":[
+          {
+             "_id":"5e40bf5697fef18946b150f5",
+             "name":"Plaza Independencia",
+             "latitude":-34.906535,
+             "longitude":-56.2019637
+          },
+          {
+             "_id":"5e40bf5697fef18946b150f6",
+             "name":"Velódromo",
+             "latitude":-34.8978271,
+             "longitude":-56.1580954
+          },
+          {
+             "_id":"5e40bf5697fef18946b150f8",
+             "name":"Gusano Loco",
+             "latitude":-34.9156486,
+             "longitude":-56.1682852
+          }
+       ],
+       "_id":"5e40c6d497fef18946b15128",
+       "name":"Mantequilla de Maní",
+       "description":"Mantequilla de maní elaborada por tribu charrúa 'Ortinganchú' ubicada en Tanganica.",
+       "price":244.33,
+       "photo":"http://tiendanatural2020.herokuapp.com/img/mant_mani_ortinganchu.jpg"
+    },
+    {
+       "branches":[
+          {
+             "_id":"5e40bf5697fef18946b150f8",
+             "name":"Gusano Loco",
+             "latitude":-34.9156486,
+             "longitude":-56.1682852
+          },
+          {
+             "_id":"5e40bf5697fef18946b150f7",
+             "name":"Antel Arena",
+             "latitude":-34.8633626,
+             "longitude":-56.1559832
+          }
+       ],
+       "_id":"5e40c6d497fef18946b15129",
+       "name":"Barras de Cereal",
+       "description":"Barritas de 104 cereales distintos de origen nacional hechas con mucho amor y paz.",
+       "price":987.65,
+       "photo":"http://tiendanatural2020.herokuapp.com/img/barritas_cereal_amor_paz.jpg"
+    },
+    {
+       "branches":[
+          {
+             "_id":"5e40bf5697fef18946b150f4",
+             "name":"Cancha Barrial",
+             "latitude":-34.8844053,
+             "longitude":-56.1609289
+          },
+          {
+             "_id":"5e40bf5697fef18946b150f7",
+             "name":"Antel Arena",
+             "latitude":-34.8633626,
+             "longitude":-56.1559832
+          }
+       ],
+       "_id":"5e40c6d497fef18946b1512a",
+       "name":"Aceite de Girasol",
+       "description":"Aceite extraído de girasoles alegres, felices y llenos de energía positiva y ultravioleta.",
+       "price":314.16,
+       "photo":"http://tiendanatural2020.herokuapp.com/img/girasol_energico.jpg"
+    },
+    {
+       "branches":[
+          {
+             "_id":"5e40bf5697fef18946b150f6",
+             "name":"Velódromo",
+             "latitude":-34.8978271,
+             "longitude":-56.1580954
+          },
+          {
+             "_id":"5e40bf5697fef18946b150f8",
+             "name":"Gusano Loco",
+             "latitude":-34.9156486,
+             "longitude":-56.1682852
+          },
+          {
+             "_id":"5e40bf5697fef18946b150f5",
+             "name":"Plaza Independencia",
+             "latitude":-34.906535,
+             "longitude":-56.2019637
+          }
+       ],
+       "_id":"5e40c6d497fef18946b1512b",
+       "name":"Guacamole",
+       "description":"Guacamole realizado con paltas de origen incaico, blandas y ricas, más que las de la feria.",
+       "price":414.14,
+       "photo":"http://tiendanatural2020.herokuapp.com/img/guacamole_delicioso.jpg"
+    },
+    {
+       "branches":[
+          {
+             "_id":"5e40bf5697fef18946b150f7",
+             "name":"Antel Arena",
+             "latitude":-34.8633626,
+             "longitude":-56.1559832
+          },
+          {
+             "_id":"5e40bf5697fef18946b150f6",
+             "name":"Velódromo",
+             "latitude":-34.8978271,
+             "longitude":-56.1580954
+          }
+       ],
+       "_id":"5e40c6d497fef18946b1512c",
+       "name":"Crema Exfoliante",
+       "description":"Crema exfoliante fabricada con partículas rejuvenecedoras, famosa por ser la que utiliza Mirtha Legrand.",
+       "price":555.55,
+       "photo":"http://tiendanatural2020.herokuapp.com/img/crema_de_mirtha.jpg"
+    },
+    {
+       "branches":[
+          {
+             "_id":"5e40bf5697fef18946b150f4",
+             "name":"Cancha Barrial",
+             "latitude":-34.8844053,
+             "longitude":-56.1609289
+          }
+       ],
+       "_id":"5e40c6d497fef18946b1512d",
+       "name":"Desodorante Artesanal",
+       "description":"Desodorante realizado con finas hierbas y perfumantes naturales, para protegerte en los días de calor.",
+       "price":300.69,
+       "photo":"http://tiendanatural2020.herokuapp.com/img/desodorante_anti_fetido.jpg"
+    },
+    {
+       "branches":[
+          {
+             "_id":"5e40bf5697fef18946b150f8",
+             "name":"Gusano Loco",
+             "latitude":-34.9156486,
+             "longitude":-56.1682852
+          },
+          {
+             "_id":"5e40bf5697fef18946b150f5",
+             "name":"Plaza Independencia",
+             "latitude":-34.906535,
+             "longitude":-56.2019637
+          }
+       ],
+       "_id":"5e40c6d497fef18946b1512e",
+       "name":"Líquido Desmaquillante",
+       "description":"Líquido para remover maquillaje (base, rimel, lápiz labial y más). Útil para maquillaje leve, o reboque grueso.",
+       "price":222.22,
+       "photo":"http://tiendanatural2020.herokuapp.com/img/desmaquillante_polenta.jpg"
+    },
+    {
+       "branches":[
+          {
+             "_id":"5e40bf5697fef18946b150f6",
+             "name":"Velódromo",
+             "latitude":-34.8978271,
+             "longitude":-56.1580954
+          }
+       ],
+       "_id":"5e40c6d497fef18946b1512f",
+       "name":"Perfume Natural",
+       "description":"Loción de sabroso aroma, en sus cuatro presentaciones: Verano, Invierno, Primavera y Horno.",
+       "price":135.79,
+       "photo":"http://tiendanatural2020.herokuapp.com/img/perfume_aromatico.jpg"
+    },
+    {
+       "branches":[
+          {
+             "_id":"5e40bf5697fef18946b150f4",
+             "name":"Cancha Barrial",
+             "latitude":-34.8844053,
+             "longitude":-56.1609289
+          },
+          {
+             "_id":"5e40bf5697fef18946b150f5",
+             "name":"Plaza Independencia",
+             "latitude":-34.906535,
+             "longitude":-56.2019637
+          },
+          {
+             "_id":"5e40bf5697fef18946b150f6",
+             "name":"Velódromo",
+             "latitude":-34.8978271,
+             "longitude":-56.1580954
+          },
+          {
+             "_id":"5e40bf5697fef18946b150f7",
+             "name":"Antel Arena",
+             "latitude":-34.8633626,
+             "longitude":-56.1559832
+          }
+       ],
+       "_id":"5e40c6d497fef18946b15130",
+       "name":"Bolsa Ecológica",
+       "description":"Bolsa de compras realizada con envoltorios de leche de distintos tipos: entera, descremada, semi-descremada y deslactosada.",
+       "price":155.51,
+       "photo":"http://tiendanatural2020.herokuapp.com/img/bolsa_de_envoltorios.jpg"
+    },
+    {
+       "branches":[
+          {
+             "_id":"5e40bf5697fef18946b150f3",
+             "name":"Campeón del Siglo",
+             "latitude":-34.7968596,
+             "longitude":-56.0694617
+          }
+       ],
+       "_id":"5e40c6d497fef18946b15131",
+       "name":"Poemas Comestibles",
+       "description":"Poemas y Frases escritas en chocolate, de diversos autores. Destaca José María Listorti con 'Amor -> 5 letras que se resumen en una sola palabra: Mucho cariño.",
+       "price":432.1,
+       "photo":"http://tiendanatural2020.herokuapp.com/img/poemas_ricos.jpg"
+    },
+    {
+       "branches":[
+          {
+             "_id":"5e40bf5697fef18946b150f9",
+             "name":"Montevideo Beer Company",
+             "latitude":-34.9129234,
+             "longitude":-56.1575821
+          },
+          {
+             "_id":"5e40bf5697fef18946b150f5",
+             "name":"Plaza Independencia",
+             "latitude":-34.906535,
+             "longitude":-56.2019637
+          }
+       ],
+       "_id":"5e40c6d497fef18946b15132",
+       "name":"Piñata Reciclada Reciclable Sonora",
+       "description":"Piñata reciclable, elaborada 100% de papel reciclado. Al explotar, contiene gases que hacen 'púm'",
+       "price":100.22,
+       "photo":"http://tiendanatural2020.herokuapp.com/img/pinata_hace_puu.jpg"
+    },
+    {
+       "branches":[
+          {
+             "_id":"5e40bf5697fef18946b150f6",
+             "name":"Velódromo",
+             "latitude":-34.8978271,
+             "longitude":-56.1580954
+          },
+          {
+             "_id":"5e40bf5697fef18946b150f7",
+             "name":"Antel Arena",
+             "latitude":-34.8633626,
+             "longitude":-56.1559832
+          }
+       ],
+       "_id":"5e40c6d497fef18946b15133",
+       "name":"Agua Saborizada",
+       "description":"Agua saborizada con frutas de estación. Presentaciones de 0.5l, 1l y 2.74l.",
+       "price":125,
+       "photo":"http://tiendanatural2020.herokuapp.com/img/aguita_sabor.jpg"
+    },
+    {
+       "branches":[
+          {
+             "_id":"5e40bf5697fef18946b150f3",
+             "name":"Campeón del Siglo",
+             "latitude":-34.7968596,
+             "longitude":-56.0694617
+          }
+       ],
+       "_id":"5e40c6d497fef18946b15134",
+       "name":"Carbón Eficiente para Fogatas",
+       "description":"Carbón inicia-fuegos de marca 'Oro y Carbón'. Excelente calidad, gran terminación. La mejor del siglo.",
+       "price":1891,
+       "photo":"http://tiendanatural2020.herokuapp.com/img/carbon_mejor_siglo.jpg"
+    },
+    {
+       "branches":[
+          {
+             "_id":"5e40bf5697fef18946b150f5",
+             "name":"Plaza Independencia",
+             "latitude":-34.906535,
+             "longitude":-56.2019637
+          },
+          {
+             "_id":"5e40bf5697fef18946b150f8",
+             "name":"Gusano Loco",
+             "latitude":-34.9156486,
+             "longitude":-56.1682852
+          }
+       ],
+       "_id":"5e40c6d497fef18946b15135",
+       "name":"Poción Multijugos",
+       "description":"Brebaje anti-resfrío y anti-gripal, ideado, elaborado y producido por Rigoberta Menchú.",
+       "price":111.6,
+       "photo":"http://tiendanatural2020.herokuapp.com/img/pocion_de_rigoberta.jpg"
+    }
+ ]
