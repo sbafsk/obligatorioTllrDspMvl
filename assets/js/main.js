@@ -1,53 +1,47 @@
-/* FUNCIONES */
 
-// prueba creacion base de datos web
-var db;
-
-var map;
 
 $(document).ready(init);
 
-//function OpenDataBase() {
-//   db = openDatabase("TestDB", 1, "guardar test", 1024);
-//};
 
-function init() {
-    //OpenDataBase();
+
+function init() {    
+    
+
+    // deberia checkear la session antes de cargar el html
+    checkSession();     
+    
+
 };
 
-
+const urlApi = "http://ec2-54-210-28-85.compute-1.amazonaws.com:3000/api/"
 
 // funciones OnsenUI
 // manejo pantalla inicio - Login/Registrar
-window.fnLogin = {};
 
-window.fnLogin.loadLogin = function (page) {
-    var content = $("#contentLogin")[0];
-    content.load(page);
-
-
-    // intente asignarle null, pero luego al validar (id != null) siempre da true.
-    if (sessionStorage.getItem("id") != "vacio") {
-        sessionStorage.setItem("token", "vacio");
-        sessionStorage.setItem("id", "vacio");
-        console.log("Se limpia el sessionStorage");
-        console.log(sessionStorage.getItem("id"));
-    }
+function loadLogin(page) {
+    let content = $("#contentLogin")[0];
+    content.load(page);   
 };
 
 
-// manejo pantalla principal - Mapa/AB medio pago/cargar saldo
-window.fn = {};
+function logOut() {
 
-window.fn.open = function () {
-    var menu = $("#menu")[0];
+    window.localStorage.removeItem("token");
+    console.log("Se limpia token del localStorage");
+    loadLogin('login.html');
+}
+
+// manejo pantalla principal
+
+function openMenu() {
+    let menu = $("#menu")[0];
     menu.open();
 };
 
-window.fn.load = function (page) {
+function loadPage(page) {
 
-    var content = $("#content")[0];
-    var menu = $("#menu")[0];
+    let content = $("#content")[0];
+    let menu = $("#menu")[0];
     content.load(page)
         .then(menu.close.bind(menu));
 
@@ -68,40 +62,111 @@ window.fn.load = function (page) {
     }
 };
 
-function editSelects(event) {       
-    document.getElementById('choose-sel').setAttribute('modifier', event.target.value);
-    
+function checkSession() {
+
+    let token = window.localStorage.getItem("token");
+
+    if(token != null && token != undefined) {
+
+        $.ajax({
+            url: urlApi +"usuarios/session",
+            type: "GET", 
+            contentType: 'application/json',
+            headers: {"x-auth": token}, 
+            success: function () {                              
+                loadLogin("appPage.html");
+            },
+            error: function (json) {
+                console.log(json);
+                //ons.notification.alert(json);
+            }
+        });
+
+        
+    }
 }
 
-// funcion de Login
+function Registrar() {
+    
+    
+    let email = $("#r_email").val();
+    let pass = $("#r_pass").val();
+    let c_pass = $("#r_confPass").val();
+    let name = $("#r_name").val();
+    let lName = $("#r_lName").val();    
+    let addr = $("#r_addr").val();
+    
+
+    try {
+        
+        if (pass != c_pass) throw new Error("Las contraseñas debe coincidir");
+
+        if (pass.length < 8) throw new Error("Las contraseña debe tener 8 caracteres minimo.");
+
+
+        let re = /\S+@\S+\.\S+/;        
+
+        if (!re.test(email)) throw new Error("Email no tiene el formato indicado.");   
+        
+              
+        let datos = {
+            "nombre": name,
+            "apellido": lName,
+            "email": email,
+            "direccion": addr,
+            "password": pass
+          }
+
+        $.ajax({
+            url: urlApi + "usuarios",
+            type: "POST",  
+            dataType: "JSON", 
+            data: JSON.stringify(datos),
+            contentType: 'application/json',
+            success: function () {
+                ons.notification.alert("Registro con Exito");                
+                loadLogin("login.html");
+            },
+            error: function (json) {
+                let jR = json.responseJSON;
+                console.log(jR.error);
+                ons.notification.alert(jR.error);
+                
+            }
+        });
+
+    } catch (error) {
+
+        ons.notification.alert(error.message);
+    }
+
+};
+
+
 function Login() {
-    // obtengo los valores del form
-    var emailImpt = $("#email").val();
-    var passwordImpt = $("#password").val();
+    
+    let emailImpt = $("#email").val();
+    let passwordImpt = $("#password").val();
     try {
 
-        if (emailImpt === "") {
-            throw new Error("El email no puede estar vacio");
-        }
-        if (passwordImpt === "") {
-            throw new Error("La contraseña no puede estar vacio");
-        }
+        if (emailImpt === "") throw new Error("El email no puede estar vacio");
+
+        if (passwordImpt === "") throw new Error("La contraseña no puede estar vacio");
 
 
         $.ajax({
-            url: "https://tiendanatural2020.herokuapp.com/api/user/login",
-            type: "POST", //forma de envio de datos 
-            dataType: "JSON", //tipo de dato de retorno
+            url: urlApi +"usuarios/session",
+            type: "POST", 
+            dataType: "JSON", 
             data: JSON.stringify({ email: emailImpt, password: passwordImpt }),
             contentType: 'application/json',
-            success: function () {
-                var content = $("#contentLogin");
-                content.load("appPage.html");
-
+            success: function (json) {   
+                window.localStorage.setItem("token", json.data.token)             
+                loadLogin("appPage.html");
             },
             error: function (json) {
-                console.log(json.responseJSON.name);
-                ons.notification.alert(json.responseJSON.name + " : <br> Verifique mail y contraseña.");
+                console.log(json.error);
+                ons.notification.alert(json.error);
             }
         });
 
@@ -111,72 +176,10 @@ function Login() {
 
 };
 
-
-// funcion registro 
-function Registrar() {
-    
-    var name = $("#r_name").val();
-    var lName = $("#r_lName").val();
-    var gen = $("#r_gen").val();
-    var email = $("#r_email").val();
-    var doc = $("#r_doc").val();
-    var tel = $("#r_tel").val();
-    var pass = $("#r_pass").val();
-    var c_pass = $("#r_confPass").val();
-
-    try {
-        
-        if (pass != c_pass) {
-            throw new Error("Las contraseñas debe coincidir");
-        }
-        // Validar que email, documento y teléfono del usuario no exista en el proceso de registro.
-        // Validar documento solo dígitos sin guiones.
-        // Validar formato de email.
-        
-        var datos = {
-            "telefono": tel,
-            "email":email,
-            "contrasenia": pass,
-            "genero": gen,
-            "apellido": name,
-            "nombre": lName,
-            "documento": doc
-        }
-
-        $.ajax({
-            url: "https://ort-api.herokuapp.com/usuarios/registro",
-            type: "POST",  
-            dataType: "JSON", 
-            data: JSON.stringify(datos),
-            contentType: 'application/json',
-            success: function () {
-                ons.notification.alert("Registro con Exito");
-                var content = $("#contentLogin");
-                content.load("appPage.html");
-            },
-            error: function (json) {
-                var jR = json.responseJSON;
-                console.log(jR);
-                if (jR.error) {
-                    console.log(jR.error);
-                    ons.notification.alert(jR.error);
-                } else {
-                    console.log("Error en el registro");
-                    ons.notification.alert("Error en el registro");
-                }
-            }
-        });
-
-    } catch (error) {
-        ons.notification.alert(error.message);
-    }
-
-};
-
 // buscar producto
 function BuscarProducto() {
 
-    var filtro = $("#productoInp").val();
+    let filtro = $("#productoInp").val();
     $("#resultadoBusqueda").html("");
 
     try {
@@ -191,13 +194,13 @@ function BuscarProducto() {
             contentType: 'application/json',
 
             success: function (response) {
-                var found = false;
+                let found = false;
 
                 $.each(response, function (i, value) {
 
                     if (producto === "" || value.name.toUpperCase().includes(filtro.toUpperCase())) {
 
-                        var prod = "<ons-list modifier='inset' style='margin-bottom: 1vh'>"
+                        let prod = "<ons-list modifier='inset' style='margin-bottom: 1vh'>"
                             + "  <img src='" + value.photo + "' style='width: 100%'>"
                             + "  <ons-list-item><div class='center'><b>" + value.name + "</b></div></ons-list-item>"
                             + "  <ons-list-item><div class='right'>$" + value.price + "</div></ons-list-item>"
@@ -261,10 +264,10 @@ function CentrarMapa(lat, lon) {
 
 function MostrarMonopatines(response) {
 
-    var myLat = response.centrado.latitud;
-    var myLon = response.centrado.longitud;
-    var monopatinesCercanos = [];
-    var distancias = [];
+    let myLat = response.centrado.latitud;
+    let myLon = response.centrado.longitud;
+    let monopatinesCercanos = [];
+    let distancias = [];
 
     CentrarMapa(myLat, myLon);
 
@@ -292,8 +295,8 @@ function MostrarMonopatines(response) {
             .on('popupopen', function () {
                 console.log("popup opened !");
                 $(".desbloquear").on("click", function () {
-                    var codigo = $("#monopatin #cod").text();
-                    var bateria = $("#monopatin #bat").text();
+                    let codigo = $("#monopatin #cod").text();
+                    let bateria = $("#monopatin #bat").text();
                     console.log("monopatin " + codigo + " " + bateria);
                     if (bateria > 4) {
                         DesbloquearMonopatin();
@@ -313,29 +316,29 @@ function FormulaHaversine(coords1, coords2, cod) {
         return x * Math.PI / 180;
     }
 
-    var lon1 = coords1[0];
-    var lat1 = coords1[1];
+    let lon1 = coords1[0];
+    let lat1 = coords1[1];
 
-    var lon2 = coords2[0];
-    var lat2 = coords2[1];
+    let lon2 = coords2[0];
+    let lat2 = coords2[1];
 
-    var R = 6371; // km
+    let R = 6371; // km
 
-    var x1 = lat2 - lat1;
-    var dLat = toRad(x1);
-    var x2 = lon2 - lon1;
-    var dLon = toRad(x2)
-    var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    let x1 = lat2 - lat1;
+    let dLat = toRad(x1);
+    let x2 = lon2 - lon1;
+    let dLon = toRad(x2)
+    let a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
         Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
         Math.sin(dLon / 2) * Math.sin(dLon / 2);
-    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    var d = R * c;
+    let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    let d = R * c;
 
     return [d, cod];
 }
 
 function VentanaMonopatin(monopatin) {
-    var ventana = "<div id='monopatin'><p>Monopatin <span id='cod'>" + monopatin.codigo + "</span></p>";
+    let ventana = "<div id='monopatin'><p>Monopatin <span id='cod'>" + monopatin.codigo + "</span></p>";
     ventana += "<p>Bateria restante <span id='bat'>" + monopatin.bateria + "</span>%</p>";
     ventana += "<button class='desbloquear'>Desbloquear</button></div>";
 
@@ -365,11 +368,11 @@ function BloquearMonopatin() {
 
 // alta medio de pago
 function AltaMedioPago() {
-    // var nroTarjeta = $("#nroTarjeta").value;
-    var nroTarjeta = $("#nroTarjeta").val();
+    // let nroTarjeta = $("#nroTarjeta").value;
+    let nroTarjeta = $("#nroTarjeta").val();
     // el numero de la tarjeta deben ser 16 digitos
     if (nroTarjeta.length == 16) {
-        var settings = {
+        let settings = {
             "url": "http://oransh.develotion.com/tarjetas.php",
             "method": "POST",
             "timeout": 0,
@@ -410,7 +413,7 @@ function BajaMedioPago() {
         message: "Desea eliminar su medio de pago?",
         callback: function (answer) {
             if (answer) {
-                var settings = {
+                let settings = {
                     "url": "http://oransh.develotion.com/tarjetas.php",
                     "method": "DELETE",
                     "timeout": 0,
@@ -443,13 +446,13 @@ function BajaMedioPago() {
 function MostrarIconoTarjeta() {
     // obtengo primer digito para setear la imagen de la tarjeta
     $("#nroTarjeta").on("input", function () {
-        var nro = $("#nroTarjeta").val();
+        let nro = $("#nroTarjeta").val();
         $("#logoTarjeta").attr("src", IconoTarjeta(nro));
     });
 }
 
 function IconoTarjeta(nro) {
-    var src = "";
+    let src = "";
     if (nro.charAt(0) == "4") {
         src = "../img/visa-icon.png";
     } else if (nro.charAt(0) == "5") {
@@ -479,7 +482,7 @@ function MostrarNumeroTarjeta(nro) {
 
 
 function ObtenerSaldo(option) {
-    var settings = {
+    let settings = {
         "url": "http://oransh.develotion.com/tarjetas.php",
         "method": "GET",
         "timeout": 0,
@@ -533,10 +536,10 @@ function ObtenerSaldo(option) {
 
 function ModificarSaldo() {
 
-    var saldo = $("#saldoModificar").val();
+    let saldo = $("#saldoModificar").val();
 
     if (saldo > 0 && saldo % 100 == 0) {
-        var settings = {
+        let settings = {
             "url": "http://oransh.develotion.com/tarjetas.php",
             "method": "PUT",
             "timeout": 0,

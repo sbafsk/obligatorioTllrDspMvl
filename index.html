@@ -8,8 +8,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <!-- Onsen UI -->
-  <link rel="stylesheet" href="https://unpkg.com/onsenui/css/onsenui.css">
-  <link rel="stylesheet" href="https://unpkg.com/onsenui/css/onsen-css-components.min.css">
+  <link rel="stylesheet" type="text/css" href="https://unpkg.com/onsenui/css/onsenui.css">
+  <link rel="stylesheet" type="text/css" href="https://unpkg.com/onsenui/css/onsen-css-components.min.css">
   <script src="https://unpkg.com/onsenui/js/onsenui.min.js"></script>
 
   <!-- JQuery -->
@@ -17,17 +17,9 @@
     integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous">
     </script>
 
-  <!-- Leaflet -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css"
-    integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
-    crossorigin="" />
-  <script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js"
-    integrity="sha512-GffPMF3RvMeYyc1LWMHtK8EbPv0iNZ8/oTtHPx9/cc2ILxQ+u905qIwdpULaqDkyBKgOaB57QTMg7ztg8Jm2Og=="
-    crossorigin=""></script>
-
   <!-- Local files -->
-  <link rel="stylesheet" type="text/css" media="screen" href="styles/main.css" />
-  <script type="text/javascript" src="functions/main.js"></script>
+  <link rel="stylesheet" type="text/css" media="screen" href="assets/css/main.css" />
+  <script type="text/javascript" src="assets/js/main.js"></script>
 
 
 </head>
@@ -35,13 +27,59 @@
 <body>
   <ons-page id="mainPage">
     <ons-splitter>
-      <ons-splitter-content id="contentLogin" page="registrar.html"></ons-splitter-content>
+      <ons-splitter-content id="contentLogin" page="login.html"></ons-splitter-content>
     </ons-splitter>
   </ons-page>
 
+
+  <template id="registrar.html">
+
+    <!-- correo(*@*.*, uniq), password(8min), nombre, apellido, direccion (calle y num)-->
+    <ons-page>
+      <ons-toolbar>
+        <div class="center">
+          Registro
+        </div>
+      </ons-toolbar>
+      <div style="text-align: center; margin-top: 30px;">
+        <p>
+          <ons-input id="r_email" modifier="underbar" placeholder="Email" float></ons-input>
+        </p>
+        <p>
+          <ons-input id="r_pass" modifier="underbar" type="password" placeholder="Contraseña" float></ons-input>
+        </p>
+        <p>
+          <ons-input id="r_confPass" modifier="underbar" type="password" placeholder="Confirmar contraseña" float>
+          </ons-input>
+        </p>
+        <p>
+          <ons-input id="r_name" modifier="underbar" placeholder="Nombre" float></ons-input>
+        </p>
+        <p>
+          <ons-input id="r_lName" modifier="underbar" placeholder="Apellido" float></ons-input>
+        </p>
+
+        <p>
+          <ons-input id="r_addr" modifier="underbar" placeholder="Direccion" float></ons-input>
+        </p>
+
+        <p style="margin-top: 30px;">
+          <ons-button onclick="Registrar()">Registrar</ons-button>
+        </p>
+      </div>
+      <br>
+      <hr>
+      <div style="text-align: center; margin-top: 30px;">
+        <p style="margin-top: 30px;">
+          <ons-button onclick="loadLogin('login.html')">Volver al Login</ons-button>
+        </p>
+      </div>
+    </ons-page>
+  </template>
+
   <template id="login.html">
     <ons-page>
-      <ons-toolbar>        
+      <ons-toolbar>
         <div class="center">
           Login
         </div>
@@ -53,10 +91,6 @@
         <p>
           <ons-input id="password" modifier="underbar" type="password" placeholder="Contraseña" float></ons-input>
         </p>
-        <ons-select id="choose-sel" onchange="editSelects(event)">          
-          <option value="U">Usuario</option>
-          <option value="M">Medico</option>
-        </ons-select>
         <p style="margin-top: 30px;">
           <ons-button onclick="Login()">Ingresar</ons-button>
         </p>
@@ -68,55 +102,7 @@
           No tienes cuenta?
         </p>
         <p style="margin-top: 30px;">
-          <ons-button onclick="fnLogin.loadLogin('registrar.html')" tappable>Registrar</ons-button>
-        </p>
-      </div>
-    </ons-page>
-  </template>
-
-  <template id="registrar.html">
-    <ons-page>
-      <ons-toolbar>        
-        <div class="center">
-          Registro
-        </div>
-      </ons-toolbar>
-      <div style="text-align: center; margin-top: 30px;">
-        <p>
-          <ons-input id="r_name" modifier="underbar" placeholder="Nombre" float></ons-input>
-        </p>
-        <p>
-          <ons-input id="r_lName" modifier="underbar" placeholder="Apellido" float></ons-input>
-        </p>
-        <ons-select id="r_gen" onchange="editSelects(event)">          
-          <option value="M">Masculino</option>
-          <option value="F">Femenino</option>
-          <option value="O">Otro</option>
-        </ons-select>        
-        <p>
-          <ons-input id="r_email" modifier="underbar" placeholder="Email" float></ons-input>
-        </p>
-        <p>
-          <ons-input id="r_doc" modifier="underbar" placeholder="Documento" float></ons-input>
-        </p>
-        <p>
-          <ons-input id="r_tel" modifier="underbar" placeholder="Telefono" float></ons-input>
-        </p>
-        <p>
-          <ons-input id="r_pass" modifier="underbar" type="password" placeholder="Contraseña" float></ons-input>
-        </p>
-        <p>
-          <ons-input id="r_confPass" modifier="underbar" type="password" placeholder="Confirmar contraseña" float></ons-input>
-        </p>
-        <p style="margin-top: 30px;">
-          <ons-button onclick="Registrar()">Registrar</ons-button>
-        </p>
-      </div>
-      <br>
-      <hr>
-      <div style="text-align: center; margin-top: 30px;">
-        <p style="margin-top: 30px;">
-          <ons-button onclick="fnLogin.loadLogin('login.html')">Volver al Login</ons-button>
+          <ons-button onclick="loadLogin('registrar.html')" tappable>Registrar</ons-button>
         </p>
       </div>
     </ons-page>
@@ -128,11 +114,12 @@
       <ons-splitter-side id="menu" side="left" width="220px" collapse>
         <ons-page>
           <ons-list>
-            <!-- home = buscarProducto -->
-            <ons-list-item onclick="fn.load('home.html')" tappable>Buscar Productos</ons-list-item>
-            <ons-list-item onclick="fn.load('misBusquedas.html')" tappable>Mis Busquedas</ons-list-item>
-            <ons-list-item onclick="fn.load('escanearProducto.html')" tappable>Escanear Prodcuto</ons-list-item>            
-            <ons-list-item input-id="cerrarSession" onclick="fnLogin.loadLogin('login.html')" tappable>Cerrar sesion</ons-list-item>
+            <!-- home = ver de agregar icono para ir al home -->
+            <ons-list-item onclick="loadPage('home.html')" tappable>Home</ons-list-item> 
+            <ons-list-item onclick="loadPage('catalogo.html')" tappable>Catálogo</ons-list-item>
+            <ons-list-item onclick="loadPage('favoritos.html')" tappable>Favoritos</ons-list-item>
+            <ons-list-item onclick="loadPage('pedidos.html')" tappable>Pedidos</ons-list-item>
+            <ons-list-item input-id="cerrarSession" onclick="logOut()" tappable>Cerrar sesion</ons-list-item>
           </ons-list>
         </ons-page>
       </ons-splitter-side>
@@ -144,66 +131,59 @@
     <ons-page>
       <ons-toolbar>
         <div class="left">
-          <ons-toolbar-button onclick="fn.open()">
+          <ons-toolbar-button onclick="openMenu()">
             <ons-icon icon="md-menu"></ons-icon>
           </ons-toolbar-button>
         </div>
         <div class="center">
-          Busqueda de Productos
+          Home
         </div>
       </ons-toolbar>
       <div style="text-align: center; margin-top: 30px;">
-
-        <p>
-          <ons-input type="text" input-id="productoInp" id="producto" modifier="underbar"
-            placeholder="Filtrar por nombre" float>
-          </ons-input>          
-        </p>
-
-        <p style="margin-top: 30px;">
-          <ons-button id="buscarProducto" onclick="BuscarProducto()">Mostrar Productos</ons-button>
-        </p>
-        <ons-list id="resultadoBusqueda">
-
-        </ons-list>
-
+<!-- ver si creamos un home lindo o usamos catalogo-->
       </div>
     </ons-page>
   </template>
 
-  <template id="misBusquedas.html">
+  <template id="catalogo.html">
     <ons-page>
       <ons-toolbar>
         <div class="left">
-          <ons-toolbar-button onclick="fn.open()">
+          <ons-toolbar-button onclick="openMenu()">
             <ons-icon class="iconMenu" icon="md-menu"></ons-icon>
           </ons-toolbar-button>
         </div>
         <div class="center">
-          Mis Busquedas
+          Catálogo de productos.
         </div>
       </ons-toolbar>
       <div style="text-align: center; margin-top: 30px;">
 
         <p>
           <ons-input type="text" input-id="prodcutoInp" id="prodcuto" modifier="underbar"
-            placeholder="Igrese Producto..." float>
-          </ons-input>          
+            placeholder="Nombre producto" float>
+          </ons-input>
+        </p>
+        <p>
+          <ons-input type="text" input-id="etiquetaInp" id="prodcuto" modifier="underbar"
+            placeholder="Etiqueta producto" float>
+          </ons-input>
         </p>
 
-        <p style="margin-top: 30px;">
-          <ons-button id="buscarProducto" onclick="BuscarProducto()">Buscar</ons-button>
+        <p style="margin-top: 30px;"> 
+          <ons-button id="buscarProducto" onclick="buscarProducto()">Buscar</ons-button>
         </p>
+        <ons-button id="scanQR" onclick="scanQR()">QR</ons-button>
 
       </div>
     </ons-page>
   </template>
 
-  <template id="bajaMedioPago.html">
+  <template id="favoritos.html">
     <ons-page>
       <ons-toolbar>
         <div class="left">
-          <ons-toolbar-button onclick="fn.open()">
+          <ons-toolbar-button onclick="openMenu()">
             <ons-icon icon="md-menu"></ons-icon>
           </ons-toolbar-button>
         </div>
@@ -226,11 +206,11 @@
     </ons-page>
   </template>
 
-  <template id="cargarSaldo.html">
+  <template id="pedidos.html">
     <ons-page>
       <ons-toolbar>
         <div class="left">
-          <ons-toolbar-button onclick="fn.open()">
+          <ons-toolbar-button onclick="openMenu()">
             <ons-icon icon="md-menu"></ons-icon>
           </ons-toolbar-button>
         </div>
@@ -262,7 +242,7 @@
     <ons-page>
       <ons-toolbar>
         <div class="left">
-          <ons-toolbar-button onclick="fn.open()">
+          <ons-toolbar-button onclick="openMenu()">
             <ons-icon icon="md-menu"></ons-icon>
           </ons-toolbar-button>
         </div>
