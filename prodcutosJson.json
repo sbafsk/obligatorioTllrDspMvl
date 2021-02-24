@@ -1,317 +1,285 @@
-[
-    {
-       "branches":[
-          {
-             "_id":"5e40bf5697fef18946b150f7",
-             "name":"Antel Arena",
-             "latitude":-34.8633626,
-             "longitude":-56.1559832
-          },
-          {
-             "_id":"5e40bf5697fef18946b150f9",
-             "name":"Montevideo Beer Company",
-             "latitude":-34.9129234,
-             "longitude":-56.1575821
-          }
-       ],
-       "_id":"5e40c6d497fef18946b15127",
-       "name":"Mermelada de Arándanos",
-       "description":"Mermelada de arándanos cosechados en el Himalaya, recolectadas manualmente.",
-       "price":1000,
-       "photo":"http://tiendanatural2020.herokuapp.com/img/mermarandanos.jpg"
-    },
-    {
-       "branches":[
-          {
-             "_id":"5e40bf5697fef18946b150f5",
-             "name":"Plaza Independencia",
-             "latitude":-34.906535,
-             "longitude":-56.2019637
-          },
-          {
-             "_id":"5e40bf5697fef18946b150f6",
-             "name":"Velódromo",
-             "latitude":-34.8978271,
-             "longitude":-56.1580954
-          },
-          {
-             "_id":"5e40bf5697fef18946b150f8",
-             "name":"Gusano Loco",
-             "latitude":-34.9156486,
-             "longitude":-56.1682852
-          }
-       ],
-       "_id":"5e40c6d497fef18946b15128",
-       "name":"Mantequilla de Maní",
-       "description":"Mantequilla de maní elaborada por tribu charrúa 'Ortinganchú' ubicada en Tanganica.",
-       "price":244.33,
-       "photo":"http://tiendanatural2020.herokuapp.com/img/mant_mani_ortinganchu.jpg"
-    },
-    {
-       "branches":[
-          {
-             "_id":"5e40bf5697fef18946b150f8",
-             "name":"Gusano Loco",
-             "latitude":-34.9156486,
-             "longitude":-56.1682852
-          },
-          {
-             "_id":"5e40bf5697fef18946b150f7",
-             "name":"Antel Arena",
-             "latitude":-34.8633626,
-             "longitude":-56.1559832
-          }
-       ],
-       "_id":"5e40c6d497fef18946b15129",
-       "name":"Barras de Cereal",
-       "description":"Barritas de 104 cereales distintos de origen nacional hechas con mucho amor y paz.",
-       "price":987.65,
-       "photo":"http://tiendanatural2020.herokuapp.com/img/barritas_cereal_amor_paz.jpg"
-    },
-    {
-       "branches":[
-          {
-             "_id":"5e40bf5697fef18946b150f4",
-             "name":"Cancha Barrial",
-             "latitude":-34.8844053,
-             "longitude":-56.1609289
-          },
-          {
-             "_id":"5e40bf5697fef18946b150f7",
-             "name":"Antel Arena",
-             "latitude":-34.8633626,
-             "longitude":-56.1559832
-          }
-       ],
-       "_id":"5e40c6d497fef18946b1512a",
-       "name":"Aceite de Girasol",
-       "description":"Aceite extraído de girasoles alegres, felices y llenos de energía positiva y ultravioleta.",
-       "price":314.16,
-       "photo":"http://tiendanatural2020.herokuapp.com/img/girasol_energico.jpg"
-    },
-    {
-       "branches":[
-          {
-             "_id":"5e40bf5697fef18946b150f6",
-             "name":"Velódromo",
-             "latitude":-34.8978271,
-             "longitude":-56.1580954
-          },
-          {
-             "_id":"5e40bf5697fef18946b150f8",
-             "name":"Gusano Loco",
-             "latitude":-34.9156486,
-             "longitude":-56.1682852
-          },
-          {
-             "_id":"5e40bf5697fef18946b150f5",
-             "name":"Plaza Independencia",
-             "latitude":-34.906535,
-             "longitude":-56.2019637
-          }
-       ],
-       "_id":"5e40c6d497fef18946b1512b",
-       "name":"Guacamole",
-       "description":"Guacamole realizado con paltas de origen incaico, blandas y ricas, más que las de la feria.",
-       "price":414.14,
-       "photo":"http://tiendanatural2020.herokuapp.com/img/guacamole_delicioso.jpg"
-    },
-    {
-       "branches":[
-          {
-             "_id":"5e40bf5697fef18946b150f7",
-             "name":"Antel Arena",
-             "latitude":-34.8633626,
-             "longitude":-56.1559832
-          },
-          {
-             "_id":"5e40bf5697fef18946b150f6",
-             "name":"Velódromo",
-             "latitude":-34.8978271,
-             "longitude":-56.1580954
-          }
-       ],
-       "_id":"5e40c6d497fef18946b1512c",
-       "name":"Crema Exfoliante",
-       "description":"Crema exfoliante fabricada con partículas rejuvenecedoras, famosa por ser la que utiliza Mirtha Legrand.",
-       "price":555.55,
-       "photo":"http://tiendanatural2020.herokuapp.com/img/crema_de_mirtha.jpg"
-    },
-    {
-       "branches":[
-          {
-             "_id":"5e40bf5697fef18946b150f4",
-             "name":"Cancha Barrial",
-             "latitude":-34.8844053,
-             "longitude":-56.1609289
-          }
-       ],
-       "_id":"5e40c6d497fef18946b1512d",
-       "name":"Desodorante Artesanal",
-       "description":"Desodorante realizado con finas hierbas y perfumantes naturales, para protegerte en los días de calor.",
-       "price":300.69,
-       "photo":"http://tiendanatural2020.herokuapp.com/img/desodorante_anti_fetido.jpg"
-    },
-    {
-       "branches":[
-          {
-             "_id":"5e40bf5697fef18946b150f8",
-             "name":"Gusano Loco",
-             "latitude":-34.9156486,
-             "longitude":-56.1682852
-          },
-          {
-             "_id":"5e40bf5697fef18946b150f5",
-             "name":"Plaza Independencia",
-             "latitude":-34.906535,
-             "longitude":-56.2019637
-          }
-       ],
-       "_id":"5e40c6d497fef18946b1512e",
-       "name":"Líquido Desmaquillante",
-       "description":"Líquido para remover maquillaje (base, rimel, lápiz labial y más). Útil para maquillaje leve, o reboque grueso.",
-       "price":222.22,
-       "photo":"http://tiendanatural2020.herokuapp.com/img/desmaquillante_polenta.jpg"
-    },
-    {
-       "branches":[
-          {
-             "_id":"5e40bf5697fef18946b150f6",
-             "name":"Velódromo",
-             "latitude":-34.8978271,
-             "longitude":-56.1580954
-          }
-       ],
-       "_id":"5e40c6d497fef18946b1512f",
-       "name":"Perfume Natural",
-       "description":"Loción de sabroso aroma, en sus cuatro presentaciones: Verano, Invierno, Primavera y Horno.",
-       "price":135.79,
-       "photo":"http://tiendanatural2020.herokuapp.com/img/perfume_aromatico.jpg"
-    },
-    {
-       "branches":[
-          {
-             "_id":"5e40bf5697fef18946b150f4",
-             "name":"Cancha Barrial",
-             "latitude":-34.8844053,
-             "longitude":-56.1609289
-          },
-          {
-             "_id":"5e40bf5697fef18946b150f5",
-             "name":"Plaza Independencia",
-             "latitude":-34.906535,
-             "longitude":-56.2019637
-          },
-          {
-             "_id":"5e40bf5697fef18946b150f6",
-             "name":"Velódromo",
-             "latitude":-34.8978271,
-             "longitude":-56.1580954
-          },
-          {
-             "_id":"5e40bf5697fef18946b150f7",
-             "name":"Antel Arena",
-             "latitude":-34.8633626,
-             "longitude":-56.1559832
-          }
-       ],
-       "_id":"5e40c6d497fef18946b15130",
-       "name":"Bolsa Ecológica",
-       "description":"Bolsa de compras realizada con envoltorios de leche de distintos tipos: entera, descremada, semi-descremada y deslactosada.",
-       "price":155.51,
-       "photo":"http://tiendanatural2020.herokuapp.com/img/bolsa_de_envoltorios.jpg"
-    },
-    {
-       "branches":[
-          {
-             "_id":"5e40bf5697fef18946b150f3",
-             "name":"Campeón del Siglo",
-             "latitude":-34.7968596,
-             "longitude":-56.0694617
-          }
-       ],
-       "_id":"5e40c6d497fef18946b15131",
-       "name":"Poemas Comestibles",
-       "description":"Poemas y Frases escritas en chocolate, de diversos autores. Destaca José María Listorti con 'Amor -> 5 letras que se resumen en una sola palabra: Mucho cariño.",
-       "price":432.1,
-       "photo":"http://tiendanatural2020.herokuapp.com/img/poemas_ricos.jpg"
-    },
-    {
-       "branches":[
-          {
-             "_id":"5e40bf5697fef18946b150f9",
-             "name":"Montevideo Beer Company",
-             "latitude":-34.9129234,
-             "longitude":-56.1575821
-          },
-          {
-             "_id":"5e40bf5697fef18946b150f5",
-             "name":"Plaza Independencia",
-             "latitude":-34.906535,
-             "longitude":-56.2019637
-          }
-       ],
-       "_id":"5e40c6d497fef18946b15132",
-       "name":"Piñata Reciclada Reciclable Sonora",
-       "description":"Piñata reciclable, elaborada 100% de papel reciclado. Al explotar, contiene gases que hacen 'púm'",
-       "price":100.22,
-       "photo":"http://tiendanatural2020.herokuapp.com/img/pinata_hace_puu.jpg"
-    },
-    {
-       "branches":[
-          {
-             "_id":"5e40bf5697fef18946b150f6",
-             "name":"Velódromo",
-             "latitude":-34.8978271,
-             "longitude":-56.1580954
-          },
-          {
-             "_id":"5e40bf5697fef18946b150f7",
-             "name":"Antel Arena",
-             "latitude":-34.8633626,
-             "longitude":-56.1559832
-          }
-       ],
-       "_id":"5e40c6d497fef18946b15133",
-       "name":"Agua Saborizada",
-       "description":"Agua saborizada con frutas de estación. Presentaciones de 0.5l, 1l y 2.74l.",
-       "price":125,
-       "photo":"http://tiendanatural2020.herokuapp.com/img/aguita_sabor.jpg"
-    },
-    {
-       "branches":[
-          {
-             "_id":"5e40bf5697fef18946b150f3",
-             "name":"Campeón del Siglo",
-             "latitude":-34.7968596,
-             "longitude":-56.0694617
-          }
-       ],
-       "_id":"5e40c6d497fef18946b15134",
-       "name":"Carbón Eficiente para Fogatas",
-       "description":"Carbón inicia-fuegos de marca 'Oro y Carbón'. Excelente calidad, gran terminación. La mejor del siglo.",
-       "price":1891,
-       "photo":"http://tiendanatural2020.herokuapp.com/img/carbon_mejor_siglo.jpg"
-    },
-    {
-       "branches":[
-          {
-             "_id":"5e40bf5697fef18946b150f5",
-             "name":"Plaza Independencia",
-             "latitude":-34.906535,
-             "longitude":-56.2019637
-          },
-          {
-             "_id":"5e40bf5697fef18946b150f8",
-             "name":"Gusano Loco",
-             "latitude":-34.9156486,
-             "longitude":-56.1682852
-          }
-       ],
-       "_id":"5e40c6d497fef18946b15135",
-       "name":"Poción Multijugos",
-       "description":"Brebaje anti-resfrío y anti-gripal, ideado, elaborado y producido por Rigoberta Menchú.",
-       "price":111.6,
-       "photo":"http://tiendanatural2020.herokuapp.com/img/pocion_de_rigoberta.jpg"
-    }
- ]
+{
+   "data": [
+       {
+           "etiquetas": [
+               "silla",
+               "plegable",
+               "apoyabrazos",
+               "camping"
+           ],
+           "_id": "601bf7cf3b11a01a7816312c",
+           "codigo": "PRCODE011",
+           "nombre": "Silla plegable con apoyabrazos",
+           "precio": 500,
+           "urlImagen": "silla1",
+           "estado": "en stock"
+       },
+       {
+           "etiquetas": [
+               "farol",
+               "led",
+               "iluminación",
+               "camping",
+               "accesorios"
+           ],
+           "_id": "601bf7cf3b11a01a78163131",
+           "codigo": "PRCODE016",
+           "nombre": "Farol Led para camping",
+           "precio": 200,
+           "urlImagen": "farol1",
+           "estado": "en stock"
+       },
+       {
+           "etiquetas": [
+               "conservadora",
+               "Coleman",
+               "frio",
+               "camping",
+               "accesorios"
+           ],
+           "_id": "601bf7cf3b11a01a78163133",
+           "codigo": "PRCODE018",
+           "nombre": "Conservadora Coleman 4,5Lt",
+           "precio": 3000,
+           "urlImagen": "conservadora1",
+           "estado": "en stock"
+       },
+       {
+           "etiquetas": [
+               "mesa",
+               "plegable",
+               "portátil",
+               "camping",
+               "equipamiento"
+           ],
+           "_id": "601bf7cf3b11a01a78163134",
+           "codigo": "PRCODE019",
+           "nombre": "Mesa plegable con asientos",
+           "precio": 2300,
+           "urlImagen": "mesa1",
+           "estado": "en stock"
+       },
+       {
+           "etiquetas": [
+               "carpa",
+               "iglú",
+               "avance",
+               "sobretecho"
+           ],
+           "_id": "601bf7cf3b11a01a78163123",
+           "codigo": "PRCODE002",
+           "nombre": "Carpa Colony iglú 3 personas",
+           "precio": 3000,
+           "urlImagen": "carpa2",
+           "estado": "en stock"
+       },
+       {
+           "etiquetas": [
+               "silla",
+               "plegable",
+               "sombrilla",
+               "camping"
+           ],
+           "_id": "601bf7cf3b11a01a7816312f",
+           "codigo": "PRCODE014",
+           "nombre": "Silla plegable con sombrilla",
+           "precio": 2500,
+           "urlImagen": "silla4",
+           "estado": "en stock"
+       },
+       {
+           "etiquetas": [
+               "cocina",
+               "olla",
+               "Nationalgeographic",
+               "camping",
+               "equipamiento"
+           ],
+           "_id": "601bf7cf3b11a01a78163135",
+           "codigo": "PRCODE020",
+           "nombre": "Set de cocina para camping",
+           "precio": 2200,
+           "urlImagen": "ollas1",
+           "estado": "sin stock"
+       },
+       {
+           "etiquetas": [
+               "sobre",
+               "dormir",
+               "capucha"
+           ],
+           "_id": "601bf7cf3b11a01a78163127",
+           "codigo": "PRCODE006",
+           "nombre": "Sobre de dormir Dormilonas",
+           "precio": 600,
+           "urlImagen": "sobre1",
+           "estado": "en stock"
+       },
+       {
+           "etiquetas": [
+               "sobre",
+               "camping",
+               "infantil",
+               "oso"
+           ],
+           "_id": "601bf7cf3b11a01a78163128",
+           "codigo": "PRCODE007",
+           "nombre": "Sobre de dormir infantil",
+           "precio": 900,
+           "urlImagen": "sobre2",
+           "estado": "en stock"
+       },
+       {
+           "etiquetas": [
+               "sobre",
+               "camping",
+               "bestway"
+           ],
+           "_id": "601bf7cf3b11a01a78163129",
+           "codigo": "PRCODE008",
+           "nombre": "Sobre de dormir Bestway",
+           "precio": 1500,
+           "urlImagen": "sobre3",
+           "estado": "en stock"
+       },
+       {
+           "etiquetas": [
+               "silla",
+               "plegable",
+               "reposera",
+               "camping"
+           ],
+           "_id": "601bf7cf3b11a01a7816312d",
+           "codigo": "PRCODE012",
+           "nombre": "Silla reposera alta",
+           "precio": 2500,
+           "urlImagen": "silla2",
+           "estado": "en stock"
+       },
+       {
+           "etiquetas": [
+               "silla",
+               "plegable",
+               "lona",
+               "camping",
+               "bolso"
+           ],
+           "_id": "601bf7cf3b11a01a78163130",
+           "codigo": "PRCODE015",
+           "nombre": "Silla plegable con bolso debajo",
+           "precio": 800,
+           "urlImagen": "silla5",
+           "estado": "en stock"
+       },
+       {
+           "etiquetas": [
+               "carpa",
+               "dormitorio",
+               "6personas"
+           ],
+           "_id": "601bf7cf3b11a01a78163124",
+           "codigo": "PRCODE003",
+           "nombre": "Carpa Bestway para 6 personas",
+           "precio": 3500,
+           "urlImagen": "carpa3",
+           "estado": "en stock"
+       },
+       {
+           "etiquetas": [
+               "carpa",
+               "estructural",
+               "Doite",
+               "5personas"
+           ],
+           "_id": "601bf7cf3b11a01a78163125",
+           "codigo": "PRCODE004",
+           "nombre": "Carpa Estructural Doite",
+           "precio": 5500,
+           "urlImagen": "carpa4",
+           "estado": "sin stock"
+       },
+       {
+           "etiquetas": [
+               "sobre",
+               "NationalGeographic",
+               "camping"
+           ],
+           "_id": "601bf7cf3b11a01a7816312a",
+           "codigo": "PRCODE009",
+           "nombre": "Sobre de dormir National Geographic",
+           "precio": 2500,
+           "urlImagen": "sobre4",
+           "estado": "sin stock"
+       },
+       {
+           "etiquetas": [
+               "sobre",
+               "camuflado",
+               "camping"
+           ],
+           "_id": "601bf7cf3b11a01a7816312b",
+           "codigo": "PRCODE010",
+           "nombre": "Sobre de dormir camuflado",
+           "precio": 1500,
+           "urlImagen": "sobre5",
+           "estado": "en stock"
+       },
+       {
+           "etiquetas": [
+               "carpa",
+               "iglú",
+               "autoarmable"
+           ],
+           "_id": "601bf7cf3b11a01a78163122",
+           "codigo": "PRCODE001",
+           "nombre": "Carpa California, iglú 4 personas",
+           "precio": 1800,
+           "urlImagen": "carpa1",
+           "estado": "en stock"
+       },
+       {
+           "etiquetas": [
+               "canadiense",
+               "carpa",
+               "Arye"
+           ],
+           "_id": "601bf7cf3b11a01a78163126",
+           "codigo": "PRCODE005",
+           "nombre": "Carpa Arye canadiense",
+           "precio": 6000,
+           "urlImagen": "carpa5",
+           "estado": "en stock"
+       },
+       {
+           "etiquetas": [
+               "silla",
+               "plegable",
+               "reposera",
+               "camping",
+               "playa"
+           ],
+           "_id": "601bf7cf3b11a01a7816312e",
+           "codigo": "PRCODE013",
+           "nombre": "Silla plegable MOR",
+           "precio": 1000,
+           "urlImagen": "silla3",
+           "estado": "en stock"
+       },
+       {
+           "etiquetas": [
+               "cocinilla",
+               "gas",
+               "cocina",
+               "camping",
+               "accesorios"
+           ],
+           "_id": "601bf7cf3b11a01a78163132",
+           "codigo": "PRCODE017",
+           "nombre": "Cocinilla a gas para camping",
+           "precio": 1500,
+           "urlImagen": "cocinilla1",
+           "estado": "en stock"
+       }
+   ],
+   "error": ""
+}
