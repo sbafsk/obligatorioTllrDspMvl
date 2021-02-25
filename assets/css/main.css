@@ -1,6 +1,4 @@
 /* HOJA DE ESTILOS */
-
-
 img#logoTarjeta {
     height: 8%;
     width: 8%;
@@ -9,6 +7,7 @@ img#logoTarjeta {
 body {
     padding: 0;
     margin: 0;
+    background-color: #e1e1e1;
 }
 html, body, #map {
     height: 100%;
@@ -19,10 +18,38 @@ html, body, #map {
     text-align: center;
 }
 
-.filterHeader{
-    font-weight: bold;  
+.btn{
+    color: #e1e1e1;
+    background-color: black;
 }
 
-.btn{
-    color: black;
+.prodStyle{
+    margin-top: .2rem;
+    font-weight: bold;
+    font-size: 2rem;
+}
+
+.prod-Style__data{
+    background-color: black;
+    color: #e1e1e1;
+    margin-left: 2%;
+    width: 95%;
+    border-radius: 5px;
+    border: 1px solid #e1e1e1;
+}
+
+.imgStyle{
+    border: 1px solid #e1e1e1;
+    border-radius: 2px;
+    width: 8rem;
+}
+
+.tagSize{
+    font-size: 15px;
+    font-weight: 400;
+}
+
+.hStyle{
+    font-size: 1.2rem;
+    font-weight: bold;
 }

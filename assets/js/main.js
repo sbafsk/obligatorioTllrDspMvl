@@ -49,7 +49,7 @@ function loadPage(page) {
             $("#prodName").val('');
             $("#prodCod").val('');
             listarProductos();
-            break;        
+            break;
         case "pedidos.html":
             listarPedidos()
             break;
@@ -151,7 +151,7 @@ function registrar() {
 
 };
 
-  
+
 function login() {
 
     let emailImpt = $("#email").val();
@@ -171,7 +171,7 @@ function login() {
             contentType: 'application/json',
             success: function (json) {
                 window.localStorage.setItem("token", json.data.token);
-                token = json.data.token;               
+                token = json.data.token;
                 loadLogin("appPage.html");
             },
             error: function (json) {
@@ -186,8 +186,6 @@ function login() {
 
 };
 
-
-
 function listarProductos() {
 
     let name = $("#prodName").val();
@@ -197,7 +195,7 @@ function listarProductos() {
     data = {
         nombre: name,
         codigo: codigo
-    }    
+    }
 
     $.ajax({
         url: urlApi + "productos",
@@ -209,15 +207,17 @@ function listarProductos() {
             console.log(response)
             let found = false;
             $.each(response.data, function (i, value) {
+           
+                let prod = "<ons-list-header class='hStyle center'>" + value.nombre + "</ons-list-header>";
 
-                let prod = "<ons-list modifier='inset' style='margin-bottom: 1vh'>"
-                    + "  <img src='" + urlImg + value.urlImagen + ".jpg' style='width: 100%'>"
-                    + "  <ons-list-header>" + value.nombre + "</ons-list-header>"
-                    + "  <ons-list-item><div class='right'>$" + value.precio + "</div></ons-list-item>"
-                    + "  <ons-list-item modifier='longdivider'>" + value.codigo + "</ons-list-item>"
-                    + "  <ons-list-item modifier='longdivider'>" + value.estado + " </ons-list-item>"
-                    + "  <ons-list-item>" + value.etiquetas.join(" | ") + " </ons-list-item>";
-                + "  </ons-list>";
+                prod += "<ons-list-item class='prod-Style__data' tappable>" + "<div class='left'>"
+                    + "<img class='list-item-thumbnail imgStyle' src='" + urlImg + value.urlImagen + ".jpg'>"
+                    + "</div>" + "<div class='center prodStyle'>" 
+                    + "<span class='list-item__subtitle'>" + " " + value.codigo + "<br>" + value.estado + "<br>" + "$" + value.precio 
+                    + "</span>" + "</div>" 
+                    + "</ons-list-item>" 
+                    + "<ons-list-item class='prod-Style__data'>" + "<div class='center tagSize'>" + value.etiquetas.join(" / ") + "</div>"
+                    + "</ons-list-item>"
 
                 $("#listProductos").append(prod);
                 found = true;
@@ -245,7 +245,7 @@ function listarPedidos() {
     data = {
         nombre: name,
         codigo: codigo
-    }    
+    }
 
     $.ajax({
         url: urlApi + "pedidos",
@@ -259,14 +259,14 @@ function listarPedidos() {
             $.each(response.data, function (i, value) {
 
                 let prod = "<ons-list modifier='inset' style='margin-bottom: 1vh'>"
-                    + "  <img src='" + urlImg + value.producto.urlImagen + ".jpg' style='width: 100%'>"
+                    + "  <img src='" + urlImg + value.producto.urlImagen + ".jpg' style='width: 20%'>"
                     + "  <ons-list-header>" + value.producto.nombre + "</ons-list-header>"
                     + "  <ons-list-item><div class='right'>$" + value.total + "</div></ons-list-item>"
                     + "  <ons-list-item modifier='longdivider'>" + value.producto.codigo + "</ons-list-item>"
                     + "  <ons-list-item modifier='longdivider'>" + value.producto.estado + " </ons-list-item>"
                     + "  <ons-list-item>" + value.producto.etiquetas.join(" | ") + " </ons-list-item>";
-                    + "  <ons-list-item>" + value.sucursal.nombre + " </ons-list-item>";
-                    + "  <ons-list-item>" + value.estado +" </ons-list-item>";
+                + "  <ons-list-item>" + value.sucursal.nombre + " </ons-list-item>";
+                + "  <ons-list-item>" + value.estado + " </ons-list-item>";
                 + "  </ons-list>";
 
                 $("#listPedidos").append(prod);
@@ -286,7 +286,11 @@ function listarPedidos() {
     })
 };
 
+function favoriteList() {
 
+}
+
+//--------------------------------------------------------------------------------------------------------//
 function MostrarMapa() {
     console.log("MostrarMapa");
     navigator.geolocation.getCurrentPosition(CrearMapa);
