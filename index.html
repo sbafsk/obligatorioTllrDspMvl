@@ -25,16 +25,16 @@
 </head>
 
 <body>
+
+  <!-- MAIN -->
   <ons-page id="mainPage">
     <ons-splitter>
       <ons-splitter-content id="contentLogin" page="login.html"></ons-splitter-content>
     </ons-splitter>
   </ons-page>
 
-
+  <!-- REGISTRO -->
   <template id="registrar.html">
-
-    <!-- correo(*@*.*, uniq), password(8min), nombre, apellido, direccion (calle y num)-->
     <ons-page>
       <ons-toolbar>
         <div class="center">
@@ -77,6 +77,7 @@
     </ons-page>
   </template>
 
+  <!-- LOGIN -->
   <template id="login.html">
     <ons-page>
       <ons-toolbar>
@@ -108,6 +109,7 @@
     </ons-page>
   </template>
 
+  <!-- MAIN - MENU -->
   <template id="appPage.html">
     <ons-splitter>
       <!-- removed swipeable -->
@@ -127,6 +129,7 @@
     </ons-splitter>
   </template>
 
+  <!-- HOME -->
   <template id="home.html">
     <ons-page>
       <ons-toolbar>
@@ -145,6 +148,7 @@
     </ons-page>
   </template>
 
+  <!-- CATALOGO -->
   <template id="catalogo.html">
     <ons-page>
       <ons-toolbar>
@@ -157,28 +161,15 @@
           Catálogo de productos.
         </div>
       </ons-toolbar>
-      <div style="text-align: center; margin-top: 30px;">
+      <div id="listProductos" style="text-align: center; margin-top: 30px;">
 
-        <p>
-          <ons-input type="text" input-id="prodcutoInp" id="prodcuto" modifier="underbar"
-            placeholder="Nombre producto" float>
-          </ons-input>
-        </p>
-        <p>
-          <ons-input type="text" input-id="etiquetaInp" id="prodcuto" modifier="underbar"
-            placeholder="Etiqueta producto" float>
-          </ons-input>
-        </p>
-
-        <p style="margin-top: 30px;"> 
-          <ons-button id="buscarProducto" onclick="buscarProducto()">Buscar</ons-button>
-        </p>
-        <ons-button id="scanQR" onclick="scanQR()">QR</ons-button>
+        
 
       </div>
     </ons-page>
   </template>
 
+  <!-- FAVORITOS -->
   <template id="favoritos.html">
     <ons-page>
       <ons-toolbar>
@@ -188,7 +179,7 @@
           </ons-toolbar-button>
         </div>
         <div class="center">
-          Baja Medio de Pago
+          Favoritos
         </div>
       </ons-toolbar>
       <div style="text-align: center; margin-top: 30px;">
@@ -206,6 +197,7 @@
     </ons-page>
   </template>
 
+  <!-- PEDIDOS -->
   <template id="pedidos.html">
     <ons-page>
       <ons-toolbar>
@@ -215,13 +207,12 @@
           </ons-toolbar-button>
         </div>
         <div class="center">
-          Cargar Saldo
+          Pedidos
         </div>
       </ons-toolbar>
       <div style="text-align: center; margin-top: 50px;">
         <p>
-          $<ons-input type="numer" id="saldoActual" modifier="underbar" placeholder="Saldo Actual" float disable>
-          </ons-input>
+          <ons-input type="numer" id="saldoActual" modifier="underbar" placeholder="Saldo Actual" float disable></ons-input>
         </p>
       </div>
       <br>
@@ -238,23 +229,7 @@
     </ons-page>
   </template>
 
-  <template id="historico.html">
-    <ons-page>
-      <ons-toolbar>
-        <div class="left">
-          <ons-toolbar-button onclick="openMenu()">
-            <ons-icon icon="md-menu"></ons-icon>
-          </ons-toolbar-button>
-        </div>
-        <div class="center">
-          Historico de viajes
-        </div>
-      </ons-toolbar>
-      <div id="map">
-        historico de viajes
-      </div>
-    </ons-page>
-  </template>
+
 
 
 </body>

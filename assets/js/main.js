@@ -4,23 +4,24 @@ $(document).ready(init);
 
 
 
-function init() {    
-    
+function init() {
+
 
     // deberia checkear la session antes de cargar el html
-    checkSession();     
-    
+    checkSession();
+
 
 };
 
 const urlApi = "http://ec2-54-210-28-85.compute-1.amazonaws.com:3000/api/"
-
+const urlImg = "http://ec2-54-210-28-85.compute-1.amazonaws.com:3000/assets/imgs/"
+let token
 // funciones OnsenUI
 // manejo pantalla inicio - Login/Registrar
 
 function loadLogin(page) {
     let content = $("#contentLogin")[0];
-    content.load(page);   
+    content.load(page);
 };
 
 
@@ -47,13 +48,13 @@ function loadPage(page) {
 
 
     switch (page) {
-        case "home.html":
+        case "catalogo.html":
+            ListarProductos();
+            break;
+        case "favoritos.html":
 
             break;
-        case "misBusquedas.html":
-
-            break;
-        case "escanearProducto.html":
+        case "pedidos.html":
 
             break;
 
@@ -64,74 +65,71 @@ function loadPage(page) {
 
 function checkSession() {
 
-    let token = window.localStorage.getItem("token");
+    token = window.localStorage.getItem("token");
 
-    if(token != null && token != undefined) {
+    if (token != null && token != undefined) {
 
         $.ajax({
-            url: urlApi +"usuarios/session",
-            type: "GET", 
-            contentType: 'application/json',
-            headers: {"x-auth": token}, 
-            success: function () {                              
+            url: urlApi + "usuarios/session",
+            type: "GET",
+            contentType: "application/json",
+            headers: { "x-auth": token },
+            success: function () {
                 loadLogin("appPage.html");
             },
             error: function (json) {
                 console.log(json);
-                //ons.notification.alert(json);
             }
         });
 
-        
+
     }
 }
 
 function Registrar() {
-    
-    
+
+
     let email = $("#r_email").val();
     let pass = $("#r_pass").val();
     let c_pass = $("#r_confPass").val();
     let name = $("#r_name").val();
-    let lName = $("#r_lName").val();    
+    let lName = $("#r_lName").val();
     let addr = $("#r_addr").val();
-    
+
 
     try {
-        
+
         if (pass != c_pass) throw new Error("Las contraseñas debe coincidir");
 
         if (pass.length < 8) throw new Error("Las contraseña debe tener 8 caracteres minimo.");
 
+        let re = /\S+@\S+\.\S+/;
+        if (!re.test(email)) throw new Error("Email no tiene el formato indicado.");
 
-        let re = /\S+@\S+\.\S+/;        
 
-        if (!re.test(email)) throw new Error("Email no tiene el formato indicado.");   
-        
-              
         let datos = {
             "nombre": name,
             "apellido": lName,
             "email": email,
             "direccion": addr,
             "password": pass
-          }
+        }
 
         $.ajax({
             url: urlApi + "usuarios",
-            type: "POST",  
-            dataType: "JSON", 
+            type: "POST",
+            dataType: "JSON",
             data: JSON.stringify(datos),
             contentType: 'application/json',
             success: function () {
-                ons.notification.alert("Registro con Exito");                
+                ons.notification.alert("Registro con Exito");
                 loadLogin("login.html");
             },
             error: function (json) {
                 let jR = json.responseJSON;
                 console.log(jR.error);
                 ons.notification.alert(jR.error);
-                
+
             }
         });
 
@@ -144,7 +142,7 @@ function Registrar() {
 
 
 function Login() {
-    
+
     let emailImpt = $("#email").val();
     let passwordImpt = $("#password").val();
     try {
@@ -155,13 +153,13 @@ function Login() {
 
 
         $.ajax({
-            url: urlApi +"usuarios/session",
-            type: "POST", 
-            dataType: "JSON", 
+            url: urlApi + "usuarios/session",
+            type: "POST",
+            dataType: "JSON",
             data: JSON.stringify({ email: emailImpt, password: passwordImpt }),
             contentType: 'application/json',
-            success: function (json) {   
-                window.localStorage.setItem("token", json.data.token)             
+            success: function (json) {
+                window.localStorage.setItem("token", json.data.token)
                 loadLogin("appPage.html");
             },
             error: function (json) {
@@ -176,58 +174,58 @@ function Login() {
 
 };
 
-// buscar producto
-function BuscarProducto() {
-
-    let filtro = $("#productoInp").val();
-    $("#resultadoBusqueda").html("");
-
-    try {
-
-        $.ajax({
-            url: "http://tiendanatural2020.herokuapp.com/api/product/all",
-
-            type: "GET",
-
-            dataType: "Json",
-
-            contentType: 'application/json',
-
-            success: function (response) {
-                let found = false;
-
-                $.each(response, function (i, value) {
-
-                    if (producto === "" || value.name.toUpperCase().includes(filtro.toUpperCase())) {
-
-                        let prod = "<ons-list modifier='inset' style='margin-bottom: 1vh'>"
-                            + "  <img src='" + value.photo + "' style='width: 100%'>"
-                            + "  <ons-list-item><div class='center'><b>" + value.name + "</b></div></ons-list-item>"
-                            + "  <ons-list-item><div class='right'>$" + value.price + "</div></ons-list-item>"
-                            + "  <ons-list-item modifier='longdivider'>" + value.description + "</ons-list-item>"
-                            + "  <ons-list-item modifier='longdivider'>En " + value.branches.length + " sucursales.</ons-list-item>"
-                            + "</ons-list>";
-                        $("#resultadoBusqueda").append(prod);
-                        found = true;
-                    }
-                });
-
-                if (!found) {
-                    ons.notification.alert("No se encontraron productos");
-                }
-
-            },
-            error: function (response) {
-                console.log("failConsultarProducots");
-                console.log(response.mensaje);
-                ons.notification.alert("Hubo un problema para acceder al listado de productos.");
-            }
-        })
 
 
-    } catch (error) {
-        ons.notification.alert(error.message);
+function ListarProductos() {
+
+    let name = $("#prodName").val();
+    let codigo = $("#prodCod").val();
+    $("#listProductos").html("");
+
+
+    data = {
+        nombre: name,
+        codigo: codigo
     }
+
+    $.ajax({
+        url: urlApi + "productos",
+        type: "GET",
+        contentType: 'application/json',
+        headers: { "x-auth": token },
+        data: data,
+        success: function (response) {
+            console.log(response)
+            let found = false;
+            $.each(response.data, function (i, value) {
+
+                let prod = "<ons-list modifier='inset' style='margin-bottom: 1vh'>"
+                    + "  <img src='" + urlImg + value.urlImagen + ".jpg' style='width: 100%'>"
+                    + "  <ons-list-header>" + value.nombre + "</ons-list-header>"
+                    + "  <ons-list-item><div class='right'>$" + value.precio + "</div></ons-list-item>"
+                    + "  <ons-list-item modifier='longdivider'>" + value.codigo + "</ons-list-item>"
+                    + "  <ons-list-item modifier='longdivider'>" + value.estado + " </ons-list-item>"
+                    + "  <ons-list-item>" + value.etiquetas.join(" | ") + " </ons-list-item>";
+                + "  </ons-list>";
+
+                $("#listProductos").append(prod);
+                found = true;
+            });
+
+            if (!found) {
+                ons.notification.alert("No se encontraron productos");
+            }
+
+        },
+        error: function (response) {
+            console.log("fail Consultar Producots");
+            console.log(response.error);
+            ons.notification.alert("Hubo un problema para acceder al listado de productos.");
+        }
+    })
+
+
+
 
 };
 
