@@ -15,7 +15,7 @@ let token
 // manejo pantalla inicio - Login/Registrar
 
 function loadLogin(page) {
-    let content = $("#contentLogin")[0];
+    let content = document.querySelector("#contentLogin");
     content.load(page);
 };
 
@@ -30,27 +30,28 @@ function logOut() {
 // manejo pantalla principal
 
 function openMenu() {
-    let menu = $("#menu")[0];
+    let menu = document.querySelector("#menu");
     menu.open();
 };
 
 function loadPage(page) {
 
-    let content = $("#content")[0];
-    let menu = $("#menu")[0];
+    let content = document.querySelector("#content");
+
+    let menu = document.querySelector("#menu");
+
     content.load(page)
         .then(menu.close.bind(menu));
 
 
     switch (page) {
         case "catalogo.html":
-            ListarProductos();
-            break;
-        case "favoritos.html":
-
-            break;
+            $("#prodName").val('');
+            $("#prodCod").val('');
+            listarProductos();
+            break;        
         case "pedidos.html":
-
+            listarPedidos()
             break;
 
         default:
@@ -96,7 +97,7 @@ function checkSession() {
     }
 }
 
-function Registrar() {
+function registrar() {
 
 
     let email = $("#r_email").val();
@@ -150,8 +151,8 @@ function Registrar() {
 
 };
 
-
-function Login() {
+  
+function login() {
 
     let emailImpt = $("#email").val();
     let passwordImpt = $("#password").val();
@@ -169,7 +170,8 @@ function Login() {
             data: JSON.stringify({ email: emailImpt, password: passwordImpt }),
             contentType: 'application/json',
             success: function (json) {
-                window.localStorage.setItem("token", json.data.token)
+                window.localStorage.setItem("token", json.data.token);
+                token = json.data.token;               
                 loadLogin("appPage.html");
             },
             error: function (json) {
@@ -186,17 +188,16 @@ function Login() {
 
 
 
-function ListarProductos() {
+function listarProductos() {
 
     let name = $("#prodName").val();
     let codigo = $("#prodCod").val();
     $("#listProductos").html("");
 
-
     data = {
         nombre: name,
         codigo: codigo
-    }
+    }    
 
     $.ajax({
         url: urlApi + "productos",
@@ -233,10 +234,56 @@ function ListarProductos() {
             ons.notification.alert("Hubo un problema para acceder al listado de productos.");
         }
     })
+};
 
+function listarPedidos() {
 
+    let name = $("#prodName").val();
+    let codigo = $("#prodCod").val();
+    $("#listProductos").html("");
 
+    data = {
+        nombre: name,
+        codigo: codigo
+    }    
 
+    $.ajax({
+        url: urlApi + "pedidos",
+        type: "GET",
+        contentType: 'application/json',
+        headers: { "x-auth": token },
+        data: data,
+        success: function (response) {
+            console.log(response)
+            let found = false;
+            $.each(response.data, function (i, value) {
+
+                let prod = "<ons-list modifier='inset' style='margin-bottom: 1vh'>"
+                    + "  <img src='" + urlImg + value.producto.urlImagen + ".jpg' style='width: 100%'>"
+                    + "  <ons-list-header>" + value.producto.nombre + "</ons-list-header>"
+                    + "  <ons-list-item><div class='right'>$" + value.total + "</div></ons-list-item>"
+                    + "  <ons-list-item modifier='longdivider'>" + value.producto.codigo + "</ons-list-item>"
+                    + "  <ons-list-item modifier='longdivider'>" + value.producto.estado + " </ons-list-item>"
+                    + "  <ons-list-item>" + value.producto.etiquetas.join(" | ") + " </ons-list-item>";
+                    + "  <ons-list-item>" + value.sucursal.nombre + " </ons-list-item>";
+                    + "  <ons-list-item>" + value.estado +" </ons-list-item>";
+                + "  </ons-list>";
+
+                $("#listPedidos").append(prod);
+                found = true;
+            });
+
+            if (!found) {
+                ons.notification.alert("No se encontraron pedidos");
+            }
+
+        },
+        error: function (response) {
+            console.log("fail Consultar Pedidos");
+            console.log(response.error);
+            ons.notification.alert("Hubo un problema para acceder al listado de Pedidos.");
+        }
+    })
 };
 
 
@@ -354,21 +401,7 @@ function VentanaMonopatin(monopatin) {
 }
 
 
-function DesbloquearMonopatin() {
-    // TO-DO    
-    // validar saldo [salta si no tiene tarjeta]
-    // modificar ventana monopatin    
-    // setear monopatin en uso [manejar con sessionStorage?]
 
-}
-
-function BloquearMonopatin() {
-    // TO-DO
-    // finalizar calculo de costo
-    // restar saldo
-    // setear monopatin como libre [manejar con sessionStorage?]
-    // guardar registro para historial
-}
 
 
 
