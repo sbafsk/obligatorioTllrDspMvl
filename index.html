@@ -25,16 +25,15 @@
 </head>
 
 <body>
+  <!-- Index -->
   <ons-page id="mainPage">
     <ons-splitter>
       <ons-splitter-content id="contentLogin" page="login.html"></ons-splitter-content>
     </ons-splitter>
   </ons-page>
 
-
+  <!-- Registro-->
   <template id="registrar.html">
-
-    <!-- correo(*@*.*, uniq), password(8min), nombre, apellido, direccion (calle y num)-->
     <ons-page>
       <ons-toolbar>
         <div class="center">
@@ -62,7 +61,6 @@
         <p>
           <ons-input id="r_addr" modifier="underbar" placeholder="Direccion" float></ons-input>
         </p>
-
         <p style="margin-top: 30px;">
           <ons-button onclick="Registrar()">Registrar</ons-button>
         </p>
@@ -77,6 +75,7 @@
     </ons-page>
   </template>
 
+  <!-- Login -->
   <template id="login.html">
     <ons-page>
       <ons-toolbar>
@@ -108,8 +107,10 @@
     </ons-page>
   </template>
 
+  <!-- Menú Hamburguesa -->
   <template id="appPage.html">
     <ons-splitter>
+      
       <!-- removed swipeable -->
       <ons-splitter-side id="menu" side="left" width="220px" collapse>
         <ons-page>
@@ -126,7 +127,7 @@
       <ons-splitter-content id="content" page="home.html"></ons-splitter-content>
     </ons-splitter>
   </template>
-
+  <!-- Home -->
   <template id="home.html">
     <ons-page>
       <ons-toolbar>
@@ -146,7 +147,7 @@
       </div>
     </ons-page>
   </template>
-
+  <!-- Catalogo de Productos -->
   <template id="catalogo.html">
     <ons-page>
       <ons-toolbar>
