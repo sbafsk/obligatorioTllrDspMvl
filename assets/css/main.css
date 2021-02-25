@@ -16,9 +16,13 @@ html, body, #map {
 }
 
 .center {
-    text-align: center;    
+    text-align: center;
 }
 
+.filterHeader{
+    font-weight: bold;  
+}
 
-
-
+.btn{
+    color: black;
+}
