@@ -207,6 +207,54 @@ function listarProductos() {
             console.log(response)
             let found = false;
             $.each(response.data, function (i, value) {
+
+                let prod = "<ons-list modifier='inset' style='margin-bottom: 1vh'>"
+                    + "  <img src='" + urlImg + value.urlImagen + ".jpg' style='width: 100%'>"
+                    + "  <ons-list-header>" + value.nombre + "</ons-list-header>"
+                    + "  <ons-list-item><div class='right'>$" + value.precio + "</div></ons-list-item>"
+                    + "  <ons-list-item modifier='longdivider'>" + value.codigo + "</ons-list-item>"
+                    + "  <ons-list-item modifier='longdivider'>" + value.estado + " </ons-list-item>"
+                    + "  <ons-list-item>" + value.etiquetas.join(" | ") + " </ons-list-item>";
+                + "  </ons-list>";
+
+                $("#listProductos").append(prod);
+                found = true;
+            });
+
+            if (!found) {
+                ons.notification.alert("No se encontraron productos");
+            }
+
+        },
+        error: function (response) {
+            console.log("fail Consultar Producots");
+            console.log(response.error);
+            ons.notification.alert("Hubo un problema para acceder al listado de productos.");
+        }
+    })
+};
+
+function detalleProducto() {
+
+    let name = $("#prodName").val();
+    let codigo = $("#prodCod").val();
+    $("#listProductos").html("");
+
+    data = {
+        nombre: name,
+        codigo: codigo
+    }
+
+    $.ajax({
+        url: urlApi + "productos",
+        type: "GET",
+        contentType: 'application/json',
+        headers: { "x-auth": token },
+        data: data,
+        success: function (response) {
+            console.log(response)
+            let found = false;
+            $.each(response.data, function (i, value) {
            
                 let prod = "<ons-list-header class='hStyle center'>" + value.nombre + "</ons-list-header>";
 
@@ -262,12 +310,11 @@ function listarPedidos() {
                     + "  <img src='" + urlImg + value.producto.urlImagen + ".jpg' style='width: 20%'>"
                     + "  <ons-list-header>" + value.producto.nombre + "</ons-list-header>"
                     + "  <ons-list-item><div class='right'>$" + value.total + "</div></ons-list-item>"
-                    + "  <ons-list-item modifier='longdivider'>" + value.producto.codigo + "</ons-list-item>"
-                    + "  <ons-list-item modifier='longdivider'>" + value.producto.estado + " </ons-list-item>"
-                    + "  <ons-list-item>" + value.producto.etiquetas.join(" | ") + " </ons-list-item>";
-                + "  <ons-list-item>" + value.sucursal.nombre + " </ons-list-item>";
-                + "  <ons-list-item>" + value.estado + " </ons-list-item>";
-                + "  </ons-list>";
+                    + "  <ons-list-item>" + value.producto.codigo + "</ons-list-item>"
+                    + "  <ons-list-item>" + value.producto.estado + " </ons-list-item>"
+                    + "  <ons-list-item>" + value.producto.etiquetas.join(" | ") + " </ons-list-item>"
+                    + "  <ons-list-item>Sucursal: " + value.sucursal.nombre + " <div class='right'>Estado: " + value.estado + "</div></ons-list-item>"
+                    + "  </ons-list>";
 
                 $("#listPedidos").append(prod);
                 found = true;
@@ -286,9 +333,138 @@ function listarPedidos() {
     })
 };
 
-function favoriteList() {
+function detallePedido() {
 
-}
+    // TODO
+
+    let name = $("#prodName").val();
+    let codigo = $("#prodCod").val();
+    $("#listProductos").html("");
+
+    data = {
+        nombre: name,
+        codigo: codigo
+    }
+
+    $.ajax({
+        url: urlApi + "pedidos",
+        type: "GET",
+        contentType: 'application/json',
+        headers: { "x-auth": token },
+        data: data,
+        success: function (response) {
+            console.log(response)
+            let found = false;
+            $.each(response.data, function (i, value) {
+
+                let prod = "<ons-list modifier='inset' style='margin-bottom: 1vh'>"
+                    + "  <img src='" + urlImg + value.producto.urlImagen + ".jpg' style='width: 100%'>"
+                    + "  <ons-list-header>" + value.producto.nombre + "</ons-list-header>"
+                    + "  <ons-list-item><div class='right'>$" + value.total + "</div></ons-list-item>"
+                    + "  <ons-list-item>" + value.producto.codigo + "</ons-list-item>"
+                    + "  <ons-list-item>" + value.producto.estado + " </ons-list-item>"
+                    + "  <ons-list-item>" + value.producto.etiquetas.join(" | ") + " </ons-list-item>"
+                    + "  <ons-list-item>Sucursal: " + value.sucursal.nombre + " <div class='right'>Estado: " + value.estado + "</div></ons-list-item>"
+                    + "  </ons-list>";
+
+                $("#listPedidos").append(prod);
+                found = true;
+            });
+
+            if (!found) {
+                ons.notification.alert("No se encontraron pedidos");
+            }
+
+        },
+        error: function (response) {
+            console.log("fail Consultar Pedidos");
+            console.log(response.error);
+            ons.notification.alert("Hubo un problema para acceder al listado de Pedidos.");
+        }
+    })
+};
+
+function altaPedido() {
+
+    let itemQty = $("#itemQty").val();
+    let idProd = $("#prodId").val();
+    let idSuc = $("#sucId").val();
+
+    try {
+        
+        if (itemQty < 1) throw Error("La cantidad debe ser mayor a 0.")
+
+            data = {
+                cantidad: itemQty,
+                idProducto: idProd,
+                idSucursal: idSuc
+            }
+
+        $.ajax({
+            url: urlApi + "pedidos",
+            type: "POST",
+            contentType: 'application/json',
+            headers: { "x-auth": token },
+            data: data,
+            success: function (response) {
+                console.log(response)
+                ons.notification.alert("Pedido creado.");
+            },
+            error: function (response) {
+                console.log("fail alta Pedidos");
+                console.log(response);
+                ons.notification.alert("Hubo un problema al realizar alta de Pedido.");
+            }
+        })
+    } catch (e) {
+        alert(e.message);
+    }
+
+
+};
+
+
+function modificarPedido() {
+
+    let comment = $("#itemQty").val();
+    let idProd = $("#prodId").val();
+    let idSuc = $("#sucId").val();
+
+    try {
+        
+        if (itemQty < 1) throw Error("La cantidad debe ser mayor a 0.")
+
+            data = {
+                cantidad: itemQty,
+                idProducto: idProd,
+                idSucursal: idSuc
+            }
+
+        $.ajax({
+            url: urlApi + "pedidos",
+            type: "POST",
+            contentType: 'application/json',
+            headers: { "x-auth": token },
+            data: data,
+            success: function (response) {
+                console.log(response)
+                ons.notification.alert("Pedido creado.");
+            },
+            error: function (response) {
+                console.log("fail alta Pedidos");
+                console.log(response);
+                ons.notification.alert("Hubo un problema al realizar alta de Pedido.");
+            }
+        })
+    } catch (e) {
+        alert(e.message);
+    }
+
+
+};
+
+
+
 
 //--------------------------------------------------------------------------------------------------------//
 function MostrarMapa() {

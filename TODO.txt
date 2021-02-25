@@ -1,0 +1,28 @@
+TODO
+
+# Registro
+# Login
+    # Control usuario logueado
+Home ???
+# Item Productos (listado)
+    Detalle Producto (realizar pedido)
+    agregar favorito
+    # Filtro
+    Filtro etiquetas
+    QR
+
+Nuevo Pedido (alta)
+    combo sucursales
+    mapa sucursales, distancia
+
+# Item Pedidos (listado)
+    actualizar pedido
+
+Item Favoritos (listado)
+
+# Cerrar sesion
+
+
+-La aplicación deberá controlar en todo momento 
+que el dispositivo tenga acceso a internet, en caso de que se pierda 
+se deberá indicar al usuario mediante una alerta. 
