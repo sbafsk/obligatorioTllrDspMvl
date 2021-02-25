@@ -25,14 +25,15 @@
 </head>
 
 <body>
-  <!-- Index -->
+
+  <!-- MAIN -->
   <ons-page id="mainPage">
     <ons-splitter>
       <ons-splitter-content id="contentLogin" page="login.html"></ons-splitter-content>
     </ons-splitter>
   </ons-page>
 
-  <!-- Registro-->
+  <!-- REGISTRO -->
   <template id="registrar.html">
     <ons-page>
       <ons-toolbar>
@@ -62,7 +63,7 @@
           <ons-input id="r_addr" modifier="underbar" placeholder="Direccion" float></ons-input>
         </p>
         <p style="margin-top: 30px;">
-          <ons-button onclick="Registrar()">Registrar</ons-button>
+          <ons-button onclick="registrar()">Registrar</ons-button>
         </p>
       </div>
       <br>
@@ -75,7 +76,7 @@
     </ons-page>
   </template>
 
-  <!-- Login -->
+  <!-- LOGIN -->
   <template id="login.html">
     <ons-page>
       <ons-toolbar>
@@ -91,7 +92,7 @@
           <ons-input id="password" modifier="underbar" type="password" placeholder="Contraseña" float></ons-input>
         </p>
         <p style="margin-top: 30px;">
-          <ons-button onclick="Login()">Ingresar</ons-button>
+          <ons-button onclick="login()">Ingresar</ons-button>
         </p>
       </div>
       <br>
@@ -107,7 +108,7 @@
     </ons-page>
   </template>
 
-  <!-- Menú Hamburguesa -->
+  <!-- MAIN - MENU -->
   <template id="appPage.html">
     <ons-splitter>
       
@@ -127,7 +128,8 @@
       <ons-splitter-content id="content" page="home.html"></ons-splitter-content>
     </ons-splitter>
   </template>
-  <!-- Home -->
+
+  <!-- HOME -->
   <template id="home.html">
     <ons-page>
       <ons-toolbar>
@@ -147,7 +149,8 @@
       </div>
     </ons-page>
   </template>
-  <!-- Catalogo de Productos -->
+
+  <!-- CATALOGO -->
   <template id="catalogo.html">
     <ons-page>
       <ons-toolbar>
@@ -163,8 +166,8 @@
           <ons-toolbar-button icon="fa-sign-out-alt" onclick="logOut()"></ons-toolbar-button>
         </div>
       </ons-toolbar>
-      <ons-list>
 
+      <ons-list>
         <ons-list-item expandable>
           <div class="right filterHeader"> Filtros
             <ons-toolbar-button icon="fa-search" style="color: black;"></ons-toolbar-button>
@@ -176,8 +179,8 @@
               </ons-input>
             </p>
             <p>
-              <ons-input type="text" input-id="prodTag" id="producto" modifier="underbar"
-                placeholder="Etiqueta del producto" float>
+              <ons-input type="text" input-id="prodCod" id="producto" modifier="underbar"
+                placeholder="Codigo del producto" float>
               </ons-input>
             </p>
 
@@ -188,9 +191,32 @@
           <ons-button id="scanQR" onclick="scanQR()">QR</ons-button>
         </ons-list-item>
       </ons-list>
+      <div id="listProductos"></div>
+
     </ons-page>
   </template>
 
+  <!-- PEDIDOS -->
+  <template id="pedidos.html">
+    <ons-page>
+    <ons-toolbar>
+      <div class="left">
+        <ons-toolbar-button onclick="openMenu()">
+          <ons-icon class="iconMenu" icon="md-menu"></ons-icon>
+        </ons-toolbar-button>
+      </div>
+      <div class="center ">
+        Pedidos
+      </div>
+      <div class="right">
+        <ons-toolbar-button icon="fa-sign-out-alt" onclick="logOut()"></ons-toolbar-button>
+      </div>
+    </ons-toolbar>
+    
+      <div id="listPedidos"></div>
+    </ons-page>
+  </template>    
+      
   <!-- Pantalla Favoritos -->
   <template id="favoritos.html">
     <ons-page id="favs">
