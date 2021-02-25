@@ -1,15 +1,10 @@
-
-
 $(document).ready(init);
 
 
 
 function init() {
-
-
     // deberia checkear la session antes de cargar el html
     checkSession();
-
 
 };
 
@@ -63,6 +58,23 @@ function loadPage(page) {
     }
 };
 
+function home() {
+    $.ajax({
+        url: urlApi + "productos",
+        type: "GET",
+        contentType: 'application/json',
+        headers: { "x-auth": token },
+        success: function () {
+            productList();
+        },
+        error: function (json) {
+            console.log(json);
+            //ons.notification.alert(json);
+        }
+    });
+}
+
+
 function checkSession() {
 
     token = window.localStorage.getItem("token");
@@ -81,8 +93,6 @@ function checkSession() {
                 console.log(json);
             }
         });
-
-
     }
 }
 
@@ -575,3 +585,6 @@ function ModificarSaldo() {
 
 
 
+function favLoader() {
+    let stringHtml = ""
+}
