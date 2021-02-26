@@ -111,7 +111,7 @@
   <!-- MAIN - MENU -->
   <template id="appPage.html">
     <ons-splitter>
-      
+
       <!-- removed swipeable -->
       <ons-splitter-side id="menu" side="left" width="220px" collapse>
         <ons-page>
@@ -199,24 +199,24 @@
   <!-- PEDIDOS -->
   <template id="pedidos.html">
     <ons-page>
-    <ons-toolbar>
-      <div class="left">
-        <ons-toolbar-button onclick="openMenu()">
-          <ons-icon class="iconMenu" icon="md-menu"></ons-icon>
-        </ons-toolbar-button>
-      </div>
-      <div class="center ">
-        Pedidos
-      </div>
-      <div class="right">
-        <ons-toolbar-button icon="fa-sign-out-alt" onclick="logOut()"></ons-toolbar-button>
-      </div>
-    </ons-toolbar>
-    
+      <ons-toolbar>
+        <div class="left">
+          <ons-toolbar-button onclick="openMenu()">
+            <ons-icon class="iconMenu" icon="md-menu"></ons-icon>
+          </ons-toolbar-button>
+        </div>
+        <div class="center ">
+          Pedidos
+        </div>
+        <div class="right">
+          <ons-toolbar-button icon="fa-sign-out-alt" onclick="logOut()"></ons-toolbar-button>
+        </div>
+      </ons-toolbar>
+
       <div id="listPedidos"></div>
     </ons-page>
-  </template>    
-      
+  </template>
+
   <!-- Pantalla Favoritos -->
   <template id="favoritos.html">
     <ons-page id="favs">
@@ -238,6 +238,28 @@
       </ons-list>
     </ons-page>
   </template>
+
+
+  <template id="detalle.html">
+    <ons-page id="detail">
+      <script>
+        ons.getScriptPage().onShow = favLoader;
+      </script>
+      <ons-toolbar>
+        <div class="left">
+          <ons-toolbar-button onclick="openMenu()">
+            <ons-icon icon="md-menu"></ons-icon>
+        </div>
+        <div class="center"></div>
+        <div class="right">
+          <ons-toolbar-button icon="fa-sign-out-alt" onclick="logOut()"></ons-toolbar-button>
+        </div>
+      </ons-toolbar>
+      <div id="bodyDetalles"></div>
+    </ons-page>
+  </template>
+
+
 
 </body>
 

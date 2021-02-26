@@ -34,7 +34,7 @@ function openMenu() {
     menu.open();
 };
 
-function loadPage(page) {
+function loadPage(page, idFlag = false) {
 
     let content = document.querySelector("#content");
 
@@ -53,7 +53,13 @@ function loadPage(page) {
         case "pedidos.html":
             listarPedidos()
             break;
-
+        // validar id ????
+        case "detalle.html":
+            if (!idFlag) detalleProducto(idFlag);
+            break;
+        case "altaPedido.html":
+            if (!idFlag) altaPedido(idFlag);
+            break;
         default:
             break;
     }
@@ -156,6 +162,7 @@ function login() {
 
     let emailImpt = $("#email").val();
     let passwordImpt = $("#password").val();
+
     try {
 
         if (emailImpt === "") throw new Error("El email no puede estar vacio");
@@ -214,7 +221,8 @@ function listarProductos() {
                     + "  <ons-list-item><div class='right'>$" + value.precio + "</div></ons-list-item>"
                     + "  <ons-list-item modifier='longdivider'>" + value.codigo + "</ons-list-item>"
                     + "  <ons-list-item modifier='longdivider'>" + value.estado + " </ons-list-item>"
-                    + "  <ons-list-item>" + value.etiquetas.join(" | ") + " </ons-list-item>";
+                    + "  <ons-list-item>" + value.etiquetas.join(" | ") + " </ons-list-item>"
+                    + "  <ons-list-item onclick='loadPage('detalle.html'," + value.id + ")><button>Ver detalle</button></ons-list-item>";
                 + "  </ons-list>";
 
                 $("#listProductos").append(prod);
@@ -234,46 +242,39 @@ function listarProductos() {
     })
 };
 
-function detalleProducto() {
-
-    let name = $("#prodName").val();
-    let codigo = $("#prodCod").val();
-    $("#listProductos").html("");
-
-    data = {
-        nombre: name,
-        codigo: codigo
-    }
+function detalleProducto(idProd) {
 
     $.ajax({
-        url: urlApi + "productos",
+        url: urlApi + "productos/" + idProd,
         type: "GET",
         contentType: 'application/json',
         headers: { "x-auth": token },
-        data: data,
         success: function (response) {
             console.log(response)
-            let found = false;
-            $.each(response.data, function (i, value) {
-           
-                let prod = "<ons-list-header class='hStyle center'>" + value.nombre + "</ons-list-header>";
 
-                prod += "<ons-list-item class='prod-Style__data' tappable>" + "<div class='left'>"
-                    + "<img class='list-item-thumbnail imgStyle' src='" + urlImg + value.urlImagen + ".jpg'>"
-                    + "</div>" + "<div class='center prodStyle'>" 
-                    + "<span class='list-item__subtitle'>" + " " + value.codigo + "<br>" + value.estado + "<br>" + "$" + value.precio 
-                    + "</span>" + "</div>" 
-                    + "</ons-list-item>" 
-                    + "<ons-list-item class='prod-Style__data'>" + "<div class='center tagSize'>" + value.etiquetas.join(" / ") + "</div>"
-                    + "</ons-list-item>"
+            let value = rensponse.data
 
-                $("#listProductos").append(prod);
-                found = true;
-            });
+            let prod = "<ons-list-header class='hStyle center'>" + value.nombre + "</ons-list-header>";
 
-            if (!found) {
-                ons.notification.alert("No se encontraron productos");
-            }
+            prod += "<ons-list-item class='prod-Style__data' tappable>" + "<div class='left'>"
+                + "<img class='list-item-thumbnail imgStyle' src='" + urlImg + value.urlImagen + ".jpg'>"
+                + "</div>" + "<div class='center prodStyle'>"
+                + "<span class='list-item__subtitle'>" + " " + value.codigo + "<br>" + value.estado + "<br>" + "$" + value.precio
+                + "</span>" + "</div>"
+                + "</ons-list-item>"
+                + "<ons-list-item class='prod-Style__data'>" + "<div class='center tagSize'>" + value.etiquetas.join(" / ") + "</div>"
+                + "</ons-list-item>"
+                + "<ons-list-item class='prod-Style__data'>" + "<div class='center prodStyle'>" + value.descripcion + "</div>"
+                + "</ons-list-item>";
+
+            let disable = "true";
+
+            if (value.stock > 0) disable = "false";
+
+            prod += "<ons-list-item class='prod-Style__data'>" + "<button class='right' disable='" + disable + "' onclick=" + loadPage("altaPedido.html", value.codigo) + ">Hacer pedido</ons-button></ons-list-item>"
+                + "</ons-list-item>";
+
+            $("#bodyDetalles").append(prod);
 
         },
         error: function (response) {
@@ -283,6 +284,7 @@ function detalleProducto() {
         }
     })
 };
+
 
 function listarPedidos() {
 
@@ -384,21 +386,21 @@ function detallePedido() {
     })
 };
 
-function altaPedido() {
+function altaPedido(idProd) {
 
     let itemQty = $("#itemQty").val();
-    let idProd = $("#prodId").val();
+    idProd = $("#prodId").val();
     let idSuc = $("#sucId").val();
 
     try {
-        
+
         if (itemQty < 1) throw Error("La cantidad debe ser mayor a 0.")
 
-            data = {
-                cantidad: itemQty,
-                idProducto: idProd,
-                idSucursal: idSuc
-            }
+        data = {
+            cantidad: itemQty,
+            idProducto: idProd,
+            idSucursal: idSuc
+        }
 
         $.ajax({
             url: urlApi + "pedidos",
@@ -431,14 +433,14 @@ function modificarPedido() {
     let idSuc = $("#sucId").val();
 
     try {
-        
+
         if (itemQty < 1) throw Error("La cantidad debe ser mayor a 0.")
 
-            data = {
-                cantidad: itemQty,
-                idProducto: idProd,
-                idSucursal: idSuc
-            }
+        data = {
+            cantidad: itemQty,
+            idProducto: idProd,
+            idSucursal: idSuc
+        }
 
         $.ajax({
             url: urlApi + "pedidos",
