@@ -310,46 +310,42 @@ function detalleProducto(data) {
     $("#bodyDetalles").append(prod);
 }
 
-function listarPedidos() {
+function listarPedidos() {    
 
-    let name = $("#prodName").val();
-    let codigo = $("#prodCod").val();
-    $("#listProductos").html("");
-
-    data = {
-        nombre: name,
-        codigo: codigo
-    }
+    $("#listPedidos").empty();
 
     $.ajax({
         url: urlApi + "pedidos",
         type: "GET",
         contentType: 'application/json',
         headers: { "x-auth": token },
-        data: data,
         success: function (response) {
             console.log(response)
             let found = false;
             $.each(response.data, function (i, value) {
 
-                let prod = "<ons-list modifier='inset' style='margin-bottom: 1vh'>"
-                    + "  <img src='" + urlImg + value.producto.urlImagen + ".jpg' style='width: 20%'>"
-                    + "  <ons-list-header>" + value.producto.nombre + "</ons-list-header>"
-                    + "  <ons-list-item><div class='right'>$" + value.total + "</div></ons-list-item>"
-                    + "  <ons-list-item>" + value.producto.codigo + "</ons-list-item>"
-                    + "  <ons-list-item>" + value.producto.estado + " </ons-list-item>"
-                    + "  <ons-list-item>" + value.producto.etiquetas.join(" | ") + " </ons-list-item>"
-                    + "  <ons-list-item>Sucursal: " + value.sucursal.nombre + " <div class='right'>Estado: " + value.estado + "</div></ons-list-item>"
-                    + "  </ons-list>";
+                let prod = `<ons-list modifier='inset' style='margin-bottom: 1vh'>
+                        <img src="${urlImg}${value.producto.urlImagen}.jpg" style='width: 20%'>
+                        <ons-list-header>  ${value.producto.nombre}  </ons-list-header>
+                        <ons-list-item><div class='right'>$  ${value.total}  </div></ons-list-item>
+                        <ons-list-item>  ${value.producto.codigo}  </ons-list-item>
+                        <ons-list-item>  ${value.producto.estado}   </ons-list-item>
+                        <ons-list-item>  ${value.producto.etiquetas.join(" | ")}   </ons-list-item>
+                        <ons-list-item>Sucursal:   ${value.sucursal.nombre}   <div class='right'>Estado:   ${value.estado}  </div></ons-list-item>`;
 
-                $("#listPedidos").append(prod);
                 found = true;
+                if (value.estado === "pendiente") {
+                    prod += `<ons-button onclick="promptPedido('${value._id}')">Cerrar Pedido</ons-button>`;
+                }
+                else {
+                    prod += `<ons-button onclick='promptPedido()' disabled='true'>Cerrar Pedido</ons-button>`;
+                }
+                $("#listPedidos").append(prod  + "</ons-list>");
             });
 
             if (!found) {
                 ons.notification.alert("No se encontraron pedidos");
             }
-
         },
         error: function (response) {
             console.log("fail Consultar Pedidos");
@@ -359,15 +355,35 @@ function listarPedidos() {
     })
 };
 
+function promptPedido(idPedido) {
+
+    console.log(idPedido)
+    ons.notification.prompt('Ingrese comentario')
+        .then(function (i) {
+            let comment
+            if (i) {
+                comment = i;
+                modificarPedido(idPedido, comment);
+            } else {
+                ons.notification.toast('Comentario necesario', { timeout: 2000 });
+                promptPedido(idPedido);
+            }            
+        })
+}
+
 function vistaAltaPedido(prod) {
 
     //$("#cantidad").on("change", function() {totalPedido()});
 
     let name = prod.nombre;
     let price = prod.precio;
+    let idProd = prod._id;
 
-    let view = `<span>Producto: ${name}</span><br>Precio $<span id="precio">${price}</span><br>`;
-
+    let view = `<span>Producto: ${name}</span><br>Precio $<span id="precio">${price}</span><br>
+                <ons-input type="text" input-id="cantidad"></ons-input><br>
+                <ons-button class="btn" onclick="totalPedido()">Calcular total</ons-button>
+                <span id="precioTotal"></span>
+                <ons-button class="btn" onclick="altaPedido('${idProd}')">Crear pedido</ons-button>`;
 
     $("#bodyAlta").append(view);
     // MAPA
@@ -425,10 +441,9 @@ function totalPedido() {
 
 function altaPedido(idProd) {
 
-    let itemQty = $("#itemQty").val();
-    idProd = $("#prodId").val();
-    let idSuc = $("#sucId").val();
-
+    let itemQty = $("#cantidad").val();
+    let idSuc = $("#sucursal").val();
+    console.log(itemQty, idSuc);
     try {
 
         if (itemQty < 1) throw Error("La cantidad debe ser mayor a 0.")
@@ -444,7 +459,7 @@ function altaPedido(idProd) {
             type: "POST",
             contentType: 'application/json',
             headers: { "x-auth": token },
-            data: data,
+            data: JSON.stringify(data),
             success: function (response) {
                 console.log(response)
                 ons.notification.alert("Pedido creado.");
@@ -462,43 +477,25 @@ function altaPedido(idProd) {
 
 };
 
-function modificarPedido() {
+function modificarPedido(idPedido, comentario) {
 
-    let comment = $("#itemQty").val();
-    let idProd = $("#prodId").val();
-    let idSuc = $("#sucId").val();
+    data = { comentario: comentario }
 
-    try {
+    $.ajax({
+        url: urlApi + "pedidos/" + idPedido,
+        type: "PUT",
+        contentType: 'application/json',
+        headers: { "x-auth": token },
+        data: JSON.stringify(data),
+        success: function () {
+            ons.notification.toast('Pedido modificado exitosamente', { timeout: 2000 })
+            loadPage("pedidos.html");
+        },
+        error: function () {
 
-        if (itemQty < 1) throw Error("La cantidad debe ser mayor a 0.")
-
-        data = {
-            cantidad: itemQty,
-            idProducto: idProd,
-            idSucursal: idSuc
+            ons.notification.toast("Error al modificar el pedido", { timeout: 2000 });
         }
-
-        $.ajax({
-            url: urlApi + "pedidos",
-            type: "POST",
-            contentType: 'application/json',
-            headers: { "x-auth": token },
-            data: data,
-            success: function (response) {
-                console.log(response)
-                ons.notification.alert("Pedido creado.");
-            },
-            error: function (response) {
-                console.log("fail alta Pedidos");
-                console.log(response);
-                ons.notification.alert("Hubo un problema al realizar alta de Pedido.");
-            }
-        })
-    } catch (e) {
-        alert(e.message);
-    }
-
-
+    })
 };
 
 function prepararMapa() {
@@ -524,7 +521,6 @@ function prepararMapa() {
     //ubico al usuario conectado
     L.marker([posUsuario.latitud, posUsuario.longitud]).addTo(mymap).bindPopup('Aqui se encuentra usted');
 }
-
 
 function buscarPosicionSucursal(sucursal) {
     //spinnerModal.show();
