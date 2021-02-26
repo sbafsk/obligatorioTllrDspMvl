@@ -219,7 +219,7 @@
 
   <!-- Pantalla Favoritos -->
   <template id="favoritos.html">
-    <ons-page id="favs">
+    <ons-page>
       <script>
         ons.getScriptPage().onShow = favLoader;
       </script>
@@ -227,6 +227,7 @@
         <div class="left">
           <ons-toolbar-button onclick="openMenu()">
             <ons-icon icon="md-menu"></ons-icon>
+          </ons-toolbar-button>
         </div>
         <div class="center">Productos favoritos</div>
         <div class="right">
@@ -241,7 +242,7 @@
 
 
   <template id="detalle.html">
-    <ons-page id="detail">
+    <ons-page>
       <script>
         ons.getScriptPage().onShow = favLoader;
       </script>
@@ -249,6 +250,7 @@
         <div class="left">
           <ons-toolbar-button onclick="openMenu()">
             <ons-icon icon="md-menu"></ons-icon>
+          </ons-toolbar-button>
         </div>
         <div class="center"></div>
         <div class="right">
@@ -256,6 +258,30 @@
         </div>
       </ons-toolbar>
       <div id="bodyDetalles"></div>
+    </ons-page>
+  </template>
+
+  
+  <template id="altaPedido.html">
+    <ons-page>
+      <script>
+        ons.getScriptPage().onShow = favLoader;
+      </script>
+      <ons-toolbar>
+        <div class="left">
+          <ons-toolbar-button onclick="openMenu()">
+            <ons-icon icon="md-menu"></ons-icon>
+          </ons-toolbar-button>
+        </div>
+        <div class="center"></div>
+        <div class="right">
+          <ons-toolbar-button icon="fa-sign-out-alt" onclick="logOut()"></ons-toolbar-button>
+        </div>
+      </ons-toolbar>
+      <div id="bodyAlta">
+
+      </div>
+      
     </ons-page>
   </template>
 

@@ -55,10 +55,11 @@ function loadPage(page, idFlag = false) {
             break;
         // validar id ????
         case "detalle.html":
-            if (!idFlag) detalleProducto(idFlag);
+            console.log("carga pagina");
+            if (idFlag) getProducto(idFlag);
             break;
         case "altaPedido.html":
-            if (!idFlag) altaPedido(idFlag);
+            if (idFlag) altaPedido(idFlag);
             break;
         default:
             break;
@@ -215,15 +216,19 @@ function listarProductos() {
             let found = false;
             $.each(response.data, function (i, value) {
 
-                let prod = "<ons-list modifier='inset' style='margin-bottom: 1vh'>"
-                    + "  <img src='" + urlImg + value.urlImagen + ".jpg' style='width: 100%'>"
-                    + "  <ons-list-header>" + value.nombre + "</ons-list-header>"
-                    + "  <ons-list-item><div class='right'>$" + value.precio + "</div></ons-list-item>"
-                    + "  <ons-list-item modifier='longdivider'>" + value.codigo + "</ons-list-item>"
-                    + "  <ons-list-item modifier='longdivider'>" + value.estado + " </ons-list-item>"
-                    + "  <ons-list-item>" + value.etiquetas.join(" | ") + " </ons-list-item>"
-                    + "  <ons-list-item onclick='loadPage('detalle.html'," + value.id + ")><button>Ver detalle</button></ons-list-item>";
-                + "  </ons-list>";
+                let prod = `<ons-list-header class='hStyle center'>${value.nombre}</ons-list-header>
+                    <ons-list-item class='prod-Style__data' tappable><div class='left'>
+                    <img class='list-item-thumbnail imgStyle' src='${urlImg + value.urlImagen}.jpg'>
+                    </div>  <div class='center prodStyle'>
+                    <span class='list-item__subtitle'> ${value.codigo}<br>${value.estado}<br>$${value.precio}  
+                    </span>  </div>
+                    </ons-list-item>
+                    <ons-list-item class='prod-Style__data'><div class='center tagSize'>${value.etiquetas.join(" / ")}</div>
+                    </ons-list-item>
+                    <ons-list-item><ons-button onclick='loadPage("detalle.html", "${value._id}")' class='btn'>Ver detalle</ons-button></ons-list-item>;
+                    </ons-list>`;
+
+
 
                 $("#listProductos").append(prod);
                 found = true;
@@ -242,7 +247,9 @@ function listarProductos() {
     })
 };
 
-function detalleProducto(idProd) {
+function getProducto(idProd) {
+
+    let value = false;
 
     $.ajax({
         url: urlApi + "productos/" + idProd,
@@ -250,32 +257,8 @@ function detalleProducto(idProd) {
         contentType: 'application/json',
         headers: { "x-auth": token },
         success: function (response) {
-            console.log(response)
-
-            let value = rensponse.data
-
-            let prod = "<ons-list-header class='hStyle center'>" + value.nombre + "</ons-list-header>";
-
-            prod += "<ons-list-item class='prod-Style__data' tappable>" + "<div class='left'>"
-                + "<img class='list-item-thumbnail imgStyle' src='" + urlImg + value.urlImagen + ".jpg'>"
-                + "</div>" + "<div class='center prodStyle'>"
-                + "<span class='list-item__subtitle'>" + " " + value.codigo + "<br>" + value.estado + "<br>" + "$" + value.precio
-                + "</span>" + "</div>"
-                + "</ons-list-item>"
-                + "<ons-list-item class='prod-Style__data'>" + "<div class='center tagSize'>" + value.etiquetas.join(" / ") + "</div>"
-                + "</ons-list-item>"
-                + "<ons-list-item class='prod-Style__data'>" + "<div class='center prodStyle'>" + value.descripcion + "</div>"
-                + "</ons-list-item>";
-
-            let disable = "true";
-
-            if (value.stock > 0) disable = "false";
-
-            prod += "<ons-list-item class='prod-Style__data'>" + "<button class='right' disable='" + disable + "' onclick=" + loadPage("altaPedido.html", value.codigo) + ">Hacer pedido</ons-button></ons-list-item>"
-                + "</ons-list-item>";
-
-            $("#bodyDetalles").append(prod);
-
+            console.log(response);
+            detalleProducto(response.data);
         },
         error: function (response) {
             console.log("fail Consultar Producots");
@@ -283,7 +266,35 @@ function detalleProducto(idProd) {
             ons.notification.alert("Hubo un problema para acceder al listado de productos.");
         }
     })
+
+    return value;
 };
+
+function detalleProducto(data) {
+
+    
+    let prod = `<ons-list-header class='hStyle center'>  ${data.nombre}  </ons-list-header>`;
+
+    prod += `<ons-list-item class='prod-Style__data' tappable>  <div class='left'>
+                 <img class='list-item-thumbnail imgStyle' src='${urlImg + data.urlImagen}.jpg'>
+                 </div>  <div class='center prodStyle'>
+                 <span class='list-item__subtitle'>     ${data.codigo}  <br>  ${data.estado}  <br>  $ ${data.precio}
+                 </span>  </div>
+                 </ons-list-item>
+                 <ons-list-item class='prod-Style__data'>  <div class='center tagSize'>${data.etiquetas.join(" / ")}</div>
+                 </ons-list-item>
+                 <ons-list-item class='prod-Style__data'>  <div class='center'>  ${data.descripcion}  </div>
+                 </ons-list-item>`;
+
+    let disable = true;
+
+    if (data.stock > 0) disable = false;
+
+    prod += `<ons-list-item class='prod-Style__data'>  <ons-button class='right' disable='  disable  ' onclick=loadPage("altaPedido.html", "${data.codigo}")>Hacer pedido</ons-button></ons-list-item>
+                 </ons-list-item>`;
+
+    $("#bodyDetalles").append(prod);
+}
 
 
 function listarPedidos() {
@@ -335,55 +346,17 @@ function listarPedidos() {
     })
 };
 
-function detallePedido() {
 
-    // TODO
 
-    let name = $("#prodName").val();
-    let codigo = $("#prodCod").val();
-    $("#listProductos").html("");
+function ventanaAltaPedido(idProd) {
 
-    data = {
-        nombre: name,
-        codigo: codigo
-    }
+    let itemQty = $("#itemQty").val();
+    idProd = $("#prodId").val();
+    let idSuc = $("#sucId").val();
 
-    $.ajax({
-        url: urlApi + "pedidos",
-        type: "GET",
-        contentType: 'application/json',
-        headers: { "x-auth": token },
-        data: data,
-        success: function (response) {
-            console.log(response)
-            let found = false;
-            $.each(response.data, function (i, value) {
 
-                let prod = "<ons-list modifier='inset' style='margin-bottom: 1vh'>"
-                    + "  <img src='" + urlImg + value.producto.urlImagen + ".jpg' style='width: 100%'>"
-                    + "  <ons-list-header>" + value.producto.nombre + "</ons-list-header>"
-                    + "  <ons-list-item><div class='right'>$" + value.total + "</div></ons-list-item>"
-                    + "  <ons-list-item>" + value.producto.codigo + "</ons-list-item>"
-                    + "  <ons-list-item>" + value.producto.estado + " </ons-list-item>"
-                    + "  <ons-list-item>" + value.producto.etiquetas.join(" | ") + " </ons-list-item>"
-                    + "  <ons-list-item>Sucursal: " + value.sucursal.nombre + " <div class='right'>Estado: " + value.estado + "</div></ons-list-item>"
-                    + "  </ons-list>";
 
-                $("#listPedidos").append(prod);
-                found = true;
-            });
 
-            if (!found) {
-                ons.notification.alert("No se encontraron pedidos");
-            }
-
-        },
-        error: function (response) {
-            console.log("fail Consultar Pedidos");
-            console.log(response.error);
-            ons.notification.alert("Hubo un problema para acceder al listado de Pedidos.");
-        }
-    })
 };
 
 function altaPedido(idProd) {

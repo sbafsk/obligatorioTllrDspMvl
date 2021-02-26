@@ -20,7 +20,7 @@ html, body, #map {
 
 .btn{
     color: #e1e1e1;
-    background-color: black;
+    background-color: #326844;
 }
 
 .prodStyle{
@@ -30,7 +30,7 @@ html, body, #map {
 }
 
 .prod-Style__data{
-    background-color: black;
+    background-color:#326844;
     color: #e1e1e1;
     margin-left: 2%;
     width: 95%;
