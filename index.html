@@ -12,6 +12,14 @@
   <link rel="stylesheet" type="text/css" href="https://unpkg.com/onsenui/css/onsen-css-components.min.css">
   <script src="https://unpkg.com/onsenui/js/onsenui.min.js"></script>
 
+  <!--Agrego el link y script correspondiente a leaflet-->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+    integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+    crossorigin="" />
+  <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+    integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+    crossorigin=""></script>
+
   <!-- JQuery -->
   <script src="https://code.jquery.com/jquery-3.4.1.min.js"
     integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous">
@@ -220,9 +228,6 @@
   <!-- Pantalla Favoritos -->
   <template id="favoritos.html">
     <ons-page>
-      <script>
-        ons.getScriptPage().onShow = favLoader;
-      </script>
       <ons-toolbar>
         <div class="left">
           <ons-toolbar-button onclick="openMenu()">
@@ -243,9 +248,6 @@
 
   <template id="detalle.html">
     <ons-page>
-      <script>
-        ons.getScriptPage().onShow = favLoader;
-      </script>
       <ons-toolbar>
         <div class="left">
           <ons-toolbar-button onclick="openMenu()">
@@ -261,12 +263,9 @@
     </ons-page>
   </template>
 
-  
+
   <template id="altaPedido.html">
     <ons-page>
-      <script>
-        ons.getScriptPage().onShow = favLoader;
-      </script>
       <ons-toolbar>
         <div class="left">
           <ons-toolbar-button onclick="openMenu()">
@@ -281,7 +280,15 @@
       <div id="bodyAlta">
 
       </div>
-      
+      <ons-input type="text" input-id="cantidad"></ons-input><br>
+      <ons-button class="btn" onclick="totalPedido()">Calcular total</ons-button>
+      <span id="precioTotal"></span>
+
+      <ons-select select-id="sucursal"></ons-select>
+      <div id="idMapa" style="height: 300px;">
+
+      </div>
+      <ons-button class="btn" onclick="altaPedido()">Aceptar</ons-button>
     </ons-page>
   </template>
 

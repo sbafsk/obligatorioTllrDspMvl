@@ -1,16 +1,30 @@
 $(document).ready(init);
 
-
+const urlApi = "http://ec2-54-210-28-85.compute-1.amazonaws.com:3000/api/"
+const urlImg = "http://ec2-54-210-28-85.compute-1.amazonaws.com:3000/assets/imgs/"
+let token
+let posUsuario = {
+    latitud: -32.898038, longitud: -55.805054
+}
+let mymap;
 
 function init() {
     // deberia checkear la session antes de cargar el html
     checkSession();
-
+    getLocation();
 };
 
-const urlApi = "http://ec2-54-210-28-85.compute-1.amazonaws.com:3000/api/"
-const urlImg = "http://ec2-54-210-28-85.compute-1.amazonaws.com:3000/assets/imgs/"
-let token
+function getLocation() {
+    window.navigator.geolocation.getCurrentPosition(
+        function (geoData) {
+            posUsuario.latitud = geoData.coords.latitude;
+            posUsuario.longitud = geoData.coords.longitude;
+        },
+        function (errorData) {
+            ons.notification.toast('No se pudo obtener la posición!', { timeout: 2000 })
+        })
+}
+
 // funciones OnsenUI
 // manejo pantalla inicio - Login/Registrar
 
@@ -19,16 +33,13 @@ function loadLogin(page) {
     content.load(page);
 };
 
-
 function logOut() {
 
     window.localStorage.removeItem("token");
     console.log("Se limpia token del localStorage");
     loadLogin('login.html');
 }
-
 // manejo pantalla principal
-
 function openMenu() {
     let menu = document.querySelector("#menu");
     menu.open();
@@ -51,15 +62,14 @@ function loadPage(page, idFlag = false) {
             listarProductos();
             break;
         case "pedidos.html":
-            listarPedidos()
+            listarPedidos();
             break;
         // validar id ????
         case "detalle.html":
-            console.log("carga pagina");
-            if (idFlag) getProducto(idFlag);
+            if (idFlag) getProducto(idFlag, "detalle");
             break;
         case "altaPedido.html":
-            if (idFlag) altaPedido(idFlag);
+            if (idFlag) getProducto(idFlag, "altaPedido");
             break;
         default:
             break;
@@ -81,7 +91,6 @@ function home() {
         }
     });
 }
-
 
 function checkSession() {
 
@@ -158,7 +167,6 @@ function registrar() {
 
 };
 
-
 function login() {
 
     let emailImpt = $("#email").val();
@@ -228,10 +236,9 @@ function listarProductos() {
                     <ons-list-item><ons-button onclick='loadPage("detalle.html", "${value._id}")' class='btn'>Ver detalle</ons-button></ons-list-item>;
                     </ons-list>`;
 
-
-
                 $("#listProductos").append(prod);
                 found = true;
+
             });
 
             if (!found) {
@@ -247,9 +254,9 @@ function listarProductos() {
     })
 };
 
-function getProducto(idProd) {
+function getProducto(idProd, origen) {
 
-    let value = false;
+    //let value = false;
 
     $.ajax({
         url: urlApi + "productos/" + idProd,
@@ -258,7 +265,8 @@ function getProducto(idProd) {
         headers: { "x-auth": token },
         success: function (response) {
             console.log(response);
-            detalleProducto(response.data);
+            handlerGetProducto(response.data, origen);
+            //detalleProducto(response.data);
         },
         error: function (response) {
             console.log("fail Consultar Producots");
@@ -267,12 +275,18 @@ function getProducto(idProd) {
         }
     })
 
-    return value;
+    //return value;
 };
+
+function handlerGetProducto(data, origen) {
+    if (origen == "detalle") detalleProducto(data);
+
+    if (origen == "altaPedido") vistaAltaPedido(data);
+}
 
 function detalleProducto(data) {
 
-    
+
     let prod = `<ons-list-header class='hStyle center'>  ${data.nombre}  </ons-list-header>`;
 
     prod += `<ons-list-item class='prod-Style__data' tappable>  <div class='left'>
@@ -290,12 +304,11 @@ function detalleProducto(data) {
 
     if (data.stock > 0) disable = false;
 
-    prod += `<ons-list-item class='prod-Style__data'>  <ons-button class='right' disable='  disable  ' onclick=loadPage("altaPedido.html", "${data.codigo}")>Hacer pedido</ons-button></ons-list-item>
+    prod += `<ons-list-item class='prod-Style__data'>  <ons-button class='right btn' disable='${disable}' onclick='loadPage("altaPedido.html", "${data._id}")'>Hacer pedido</ons-button></ons-list-item>
                  </ons-list-item>`;
 
     $("#bodyDetalles").append(prod);
 }
-
 
 function listarPedidos() {
 
@@ -346,18 +359,69 @@ function listarPedidos() {
     })
 };
 
+function vistaAltaPedido(prod) {
+
+    //$("#cantidad").on("change", function() {totalPedido()});
+
+    let name = prod.nombre;
+    let price = prod.precio;
+
+    let view = `<span>Producto: ${name}</span><br>Precio $<span id="precio">${price}</span><br>`;
 
 
-function ventanaAltaPedido(idProd) {
-
-    let itemQty = $("#itemQty").val();
-    idProd = $("#prodId").val();
-    let idSuc = $("#sucId").val();
-
-
-
-
+    $("#bodyAlta").append(view);
+    // MAPA
+    prepararMapa();
+    // COMBO SUCURSALES y ubicacion
+    getSucursales();
 };
+
+function getSucursales() {
+
+    //Llamo sucursales a la Api (GET)
+    $.ajax({
+        url: urlApi + "sucursales",
+        type: "GET",
+        contentType: 'application/json',
+        headers: { "x-auth": token },
+        success: function (response) {
+            comboSucursales(response.data);
+            //preparo el mapa
+
+        },
+        error: function (response) {
+            console.log("Sucursal no obtenida");
+            console.log(response);
+        }
+    })
+}
+
+function comboSucursales(response) {
+    let slc = '';
+    for (i = 0; i < response.length; i++) {
+        let nombreSucursal = response[i].nombre;
+        let id = response[i]._id;
+
+        slc += `<option value="${id}">${nombreSucursal}</option> `
+
+        buscarPosicionSucursal(response[i]);
+    }
+    $('#sucursal').html(slc);
+}
+
+function totalPedido() {
+
+    let qty = $("#cantidad").val();
+    let price = $("#precio").text();
+
+    if (isNaN(qty)) {
+        ons.notification.toast("Cantidad debe ser numerico.", { timeout: 2000 })
+    } else {
+        total = price * qty;
+        $("#precioTotal").text(total);
+    }
+
+}
 
 function altaPedido(idProd) {
 
@@ -398,7 +462,6 @@ function altaPedido(idProd) {
 
 };
 
-
 function modificarPedido() {
 
     let comment = $("#itemQty").val();
@@ -438,341 +501,57 @@ function modificarPedido() {
 
 };
 
+function prepararMapa() {
 
-
-
-//--------------------------------------------------------------------------------------------------------//
-function MostrarMapa() {
-    console.log("MostrarMapa");
-    navigator.geolocation.getCurrentPosition(CrearMapa);
-
-}
-
-function CrearMapa(pos) {
-    console.log("CrearMapa");
-    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-        attribution: "&copy; <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors"
-    }).addTo(map);
-
-    // ubicacion actual
-    //L.marker([pos.coords.latitude, pos.coords.longitude]).addTo(map)
-    //    .bindPopup("Mi ubicacion.")
-    //    .openPopup();
-
-}
-
-function CentrarMapa(lat, lon) {
-    map = L.map("map").setView([lat, lon], 13);
-
-    // ubicacion API
-    L.marker([lat, lon]).addTo(map)
-        .bindPopup("Mi ubicacion.")
-        .openPopup();
-}
-
-
-
-function MostrarMonopatines(response) {
-
-    let myLat = response.centrado.latitud;
-    let myLon = response.centrado.longitud;
-    let monopatinesCercanos = [];
-    let distancias = [];
-
-    CentrarMapa(myLat, myLon);
-
-    // obtengo distancias
-    response.monopatines.forEach(mp => {
-        distancias.push(FormulaHaversine([mp.latitud, mp.longitud], [myLat, myLon], mp.codigo));
-    });
-
-    distancias.sort();
-
-    // obtengo los 5 mas cercanos
-    for (let i = 0; i < 5; i++) {
-        response.monopatines.forEach(mp => {
-            if (mp.codigo == distancias[i][1]) {
-                monopatinesCercanos.push(mp);
-            };
-        });
-    };
-
-    console.log(monopatinesCercanos);
-
-    monopatinesCercanos.forEach(mpC => {
-        L.marker([mpC.latitud, mpC.longitud]).addTo(map)
-            .bindPopup(VentanaMonopatin(mpC))
-            .on('popupopen', function () {
-                console.log("popup opened !");
-                $(".desbloquear").on("click", function () {
-                    let codigo = $("#monopatin #cod").text();
-                    let bateria = $("#monopatin #bat").text();
-                    console.log("monopatin " + codigo + " " + bateria);
-                    if (bateria > 4) {
-                        DesbloquearMonopatin();
-                    } else {
-                        ons.notification.alert("Bateria menor al 5%");
-                    }
-                });
-            });;
-    });
-
-
-
-}
-
-function FormulaHaversine(coords1, coords2, cod) {
-    function toRad(x) {
-        return x * Math.PI / 180;
+    //remuevo el mapa si existe un mapa activo
+    if (mymap) {
+        mymap = mymap.remove();
     }
-
-    let lon1 = coords1[0];
-    let lat1 = coords1[1];
-
-    let lon2 = coords2[0];
-    let lat2 = coords2[1];
-
-    let R = 6371; // km
-
-    let x1 = lat2 - lat1;
-    let dLat = toRad(x1);
-    let x2 = lon2 - lon1;
-    let dLon = toRad(x2)
-    let a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-        Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
-        Math.sin(dLon / 2) * Math.sin(dLon / 2);
-    let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    let d = R * c;
-
-    return [d, cod];
-}
-
-function VentanaMonopatin(monopatin) {
-    let ventana = "<div id='monopatin'><p>Monopatin <span id='cod'>" + monopatin.codigo + "</span></p>";
-    ventana += "<p>Bateria restante <span id='bat'>" + monopatin.bateria + "</span>%</p>";
-    ventana += "<button class='desbloquear'>Desbloquear</button></div>";
-
-    return ventana;
-}
-
-
-
-
-
-
-
-
-// alta medio de pago
-function AltaMedioPago() {
-    // let nroTarjeta = $("#nroTarjeta").value;
-    let nroTarjeta = $("#nroTarjeta").val();
-    // el numero de la tarjeta deben ser 16 digitos
-    if (nroTarjeta.length == 16) {
-        let settings = {
-            "url": "http://oransh.develotion.com/tarjetas.php",
-            "method": "POST",
-            "timeout": 0,
-            "headers": {
-                "token": sessionStorage.getItem("token"),
-                "Content-Type": "application/x-www-form-urlencoded"
-            },
-            "data": {
-                "id": sessionStorage.getItem("id"),
-                "numero": nroTarjeta
-            }
-        };
-
-        $.ajax(settings)
-            .done(function (response) {
-                console.log("doneAlta");
-                console.log(response.mensaje);
-                $("#nroTarjeta").prop("disabled", true);
-                $("#AgregarMedioPago").prop("disabled", true);
-                ons.notification.alert(response.mensaje);
-
-            })
-            .fail(function (response) {
-                console.log("failAlta");
-                console.log(response.responseJSON.mensaje);
-                ons.notification.alert(response.responseJSON.mensaje);
-            });
-    } else {
-        ons.notification.alert("Debe ingresar 16 digitos.");
-    }
-
-};
-
-
-function BajaMedioPago() {
-
-    ons.notification.confirm({
-        message: "Desea eliminar su medio de pago?",
-        callback: function (answer) {
-            if (answer) {
-                let settings = {
-                    "url": "http://oransh.develotion.com/tarjetas.php",
-                    "method": "DELETE",
-                    "timeout": 0,
-                    "headers": {
-                        "token": sessionStorage.getItem("token"),
-                        "Content-Type": "application/x-www-form-urlencoded"
-                    },
-                    "data": {
-                        "id": sessionStorage.getItem("id")
-                    }
-                };
-
-                $.ajax(settings)
-                    .done(function (response) {
-                        console.log("doneBaja");
-                        console.log(response.mensaje);
-                        MostrarNumeroTarjeta("Tarjeta eliminada")
-                        ons.notification.alert(response.mensaje);
-                    })
-
-                    .fail(function (response) {
-                        console.log("failBaja");
-                        console.log(response);
-                    });
-            };
+    //inicializo nuevamente el mapa
+    mymap = L.map('idMapa').setView([posUsuario.latitud, posUsuario.longitud], 11);
+    //agrego la cartografía
+    L.tileLayer(
+        "https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWNhaWFmYSIsImEiOiJjanh4cThybXgwMjl6M2RvemNjNjI1MDJ5In0.BKUxkp2V210uiAM4Pd2YWw",
+        {
+            attribution:
+                'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+            maxZoom: 18,
+            id: "mapbox/streets-v11",
+            accessToken: "your.mapbox.access.token",
         }
-    });
-};
+    ).addTo(mymap);
 
-function MostrarIconoTarjeta() {
-    // obtengo primer digito para setear la imagen de la tarjeta
-    $("#nroTarjeta").on("input", function () {
-        let nro = $("#nroTarjeta").val();
-        $("#logoTarjeta").attr("src", IconoTarjeta(nro));
-    });
-}
-
-function IconoTarjeta(nro) {
-    let src = "";
-    if (nro.charAt(0) == "4") {
-        src = "../img/visa-icon.png";
-    } else if (nro.charAt(0) == "5") {
-        src = "../img/master-icon.png";
-    }
-    return src;
-};
-
-
-function MostrarNumeroTarjeta(nro) {
-
-    $("#nroTarjeta").val(nro);
-
-    $("#nroTarjeta").prop("disabled", true);
-
-    $("#AgregarMedioPago").prop("disabled", true);
-
-    $("#EliminarMedioPago").prop("disabled", false);
-
-    $("#logoTarjeta").attr("src", IconoTarjeta(nro));
-
-    // valido si recibo un mensaje y no el nro de tarjeta.
-    if (nro.includes("arjeta")) {
-        $("#EliminarMedioPago").prop("disabled", true)
-    }
+    //ubico al usuario conectado
+    L.marker([posUsuario.latitud, posUsuario.longitud]).addTo(mymap).bindPopup('Aqui se encuentra usted');
 }
 
 
-function ObtenerSaldo(option) {
-    let settings = {
-        "url": "http://oransh.develotion.com/tarjetas.php",
-        "method": "GET",
-        "timeout": 0,
-        "headers": {
-            "token": sessionStorage.getItem("token"),
-            "Content-Type": "application/x-www-form-urlencoded"
+function buscarPosicionSucursal(sucursal) {
+    //spinnerModal.show();
+
+    //realizo la llamada a la api nominatim.openstring para obtener los datos de geolocation
+    //a partir de texto con los datos de la dirección
+    //para más parámetros revisar la doc de la api
+    $.ajax({
+        method: 'GET',
+        url: `http://nominatim.openstreetmap.org/search?format=json&street=${sucursal.direccion}&country=Uruguay`,
+        success: function (dataResponse) {
+            //en caso de éxito y de que haya algún dato.
+            if (dataResponse.length > 0) {
+                //tomo el primero (si los datos de la dirección son precisos solo debería tener 1)
+                let sucGeolocation = dataResponse[0];
+
+                //utilizo la función de distancia que tiene el mapa para calcular la distancia en metros
+                let distanciaMetros = mymap.distance(L.latLng(posUsuario.latitud, posUsuario.longitud), L.latLng(sucGeolocation.lat, sucGeolocation.lon))
+                //convierto a km con 2 lugares luego de la coma
+                let distanciaKm = (distanciaMetros / 1000).toFixed(2);
+                //agrego todos los datos al marcador
+                L.marker([sucGeolocation.lat, sucGeolocation.lon]).addTo(mymap).bindPopup(`${sucursal.nombre} ${distanciaKm}km`);
+            }
+            else {
+                ons.notification.toast('Error al obtener ubicación de la sucursal', { timeout: 2000 });
+            }
         },
-        "data": {
-            "id": sessionStorage.getItem("id")
-        }
-    };
-
-    $.ajax(settings)
-        .done(function (response) {
-            console.log("doneGet");
-            console.log(response);
-            switch (option) {
-                case "alta":
-                    MostrarNumeroTarjeta(response.numero);
-                    ons.notification.alert("Ya cuenta con un medio de pago.");
-                    break;
-                case "baja":
-                    MostrarNumeroTarjeta(response.numero);
-                    break;
-                case "cargar":
-                    $("#saldoActual").val(response.saldo);
-                    break;
-                default:
-                    break;
-            }
-
-
-        })
-        .fail(function (response) {
-            console.log("failGet");
-            console.log(response.responseJSON.mensaje);
-            switch (option) {
-                case "baja":
-                    MostrarNumeroTarjeta(response.responseJSON.mensaje);
-                    break;
-                case "cargar":
-                    $("#AgregarSaldo").prop("disabled", true);
-                    ons.notification.alert(response.responseJSON.mensaje);
-                    break;
-                default:
-                    break;
-            }
-        });
-}
-
-
-function ModificarSaldo() {
-
-    let saldo = $("#saldoModificar").val();
-
-    if (saldo > 0 && saldo % 100 == 0) {
-        let settings = {
-            "url": "http://oransh.develotion.com/tarjetas.php",
-            "method": "PUT",
-            "timeout": 0,
-            "headers": {
-                "token": sessionStorage.getItem("token"),
-                "Content-Type": "application/x-www-form-urlencoded"
-            },
-            "data": {
-                "id": sessionStorage.getItem("id"),
-                "saldo": saldo
-            }
-        };
-
-        $.ajax(settings)
-            .done(function (response) {
-                console.log("donePut");
-                console.log(response);
-                $("#saldoActual").val(response.saldo);
-                $("#saldoModificar").val("");
-                ons.notification.alert(response.mensaje);
-            })
-            .fail(function (response) {
-                console.log("failPut");
-                console.log(response.responseJSON.mensaje);
-
-            });
-    } else {
-        ons.notification.alert("El monto debe ser multiplo de 100.");
-    }
-
-}
-
-
-
-
-
-
-function favLoader() {
-    let stringHtml = ""
+        error: function () { console.log('Error') }
+    })
 }
