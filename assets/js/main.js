@@ -7,11 +7,17 @@ let posUsuario = {
     latitud: -32.898038, longitud: -55.805054
 }
 let mymap;
+let favoritas;
+
 
 function init() {
     // deberia checkear la session antes de cargar el html
     checkSession();
     getLocation();
+    favoritas = JSON.parse(window.localStorage.getItem("listaFavoritos"));
+    if (!favoritas) {
+        favoritas = [];
+    }
 };
 
 function getLocation() {
@@ -44,7 +50,11 @@ function openMenu() {
     let menu = document.querySelector("#menu");
     menu.open();
 };
-
+/**
+ * -#- LOADPAGE -#-
+ * @param page id del template html
+ * @param idFlag se utiliza para llamar funciones adicionales al abrir determinada pagina (opcional)
+ */
 function loadPage(page, idFlag = false) {
 
     let content = document.querySelector("#content");
@@ -59,7 +69,7 @@ function loadPage(page, idFlag = false) {
         case "catalogo.html":
             $("#prodName").val('');
             $("#prodCod").val('');
-            listarProductos();
+            listarProductos(false);
             break;
         case "pedidos.html":
             listarPedidos();
@@ -72,6 +82,9 @@ function loadPage(page, idFlag = false) {
             if (idFlag) getProducto(idFlag, "altaPedido");
             break;
         default:
+            break;
+        case "favoritos.html":
+            listarProductos(true);
             break;
     }
 };
@@ -167,6 +180,9 @@ function registrar() {
 
 };
 
+/**
+ * -#- LOGIN -#-
+ */
 function login() {
 
     let emailImpt = $("#email").val();
@@ -202,11 +218,12 @@ function login() {
 
 };
 
-function listarProductos() {
+function listarProductos(fav) {
+
+    fav ? $("#listFavoritos").html("") : $("#listProductos").html("");
 
     let name = $("#prodName").val();
     let codigo = $("#prodCod").val();
-    $("#listProductos").html("");
 
     data = {
         nombre: name,
@@ -220,43 +237,76 @@ function listarProductos() {
         headers: { "x-auth": token },
         data: data,
         success: function (response) {
-            console.log(response)
-            let found = false;
-            $.each(response.data, function (i, value) {
-
-                let prod = `<ons-list-header class='hStyle center'>${value.nombre}</ons-list-header>
-                    <ons-list-item class='prod-Style__data' tappable><div class='left'>
-                    <img class='list-item-thumbnail imgStyle' src='${urlImg + value.urlImagen}.jpg'>
-                    </div>  <div class='center prodStyle'>
-                    <span class='list-item__subtitle'> ${value.codigo}<br>${value.estado}<br>$${value.precio}  
-                    </span>  </div>
-                    </ons-list-item>
-                    <ons-list-item class='prod-Style__data'><div class='center tagSize'>${value.etiquetas.join(" / ")}</div>
-                    </ons-list-item>
-                    <ons-list-item><ons-button onclick='loadPage("detalle.html", "${value._id}")' class='btn'>Ver detalle</ons-button></ons-list-item>;
-                    </ons-list>`;
-
-                $("#listProductos").append(prod);
-                found = true;
-
-            });
-
-            if (!found) {
-                ons.notification.alert("No se encontraron productos");
-            }
-
+            vistaListadoProductos(response.data, fav);
         },
         error: function (response) {
-            console.log("fail Consultar Producots");
             console.log(response.error);
             ons.notification.alert("Hubo un problema para acceder al listado de productos.");
         }
     })
 };
 
-function getProducto(idProd, origen) {
+function vistaListadoProductos(data, fav) {
+    let found = false;
 
-    //let value = false;
+    $.each(data, function (i, value) {
+
+        if (favoritas.indexOf(value._id) === -1) {
+            color = "black"
+        } else {
+            color = "red"
+        }
+
+        let prod = `<ons-list-header class='hStyle center'>${value.nombre} 
+            <ons-icon id="fav${value._id}" icon="md-favorite" style="color: ${color}; float: right; class="list-item__icon" onclick="productosFavoritos('${value._id}')"></ons-icon>
+            </ons-list-header>
+            <ons-list-item class='prod-Style__data' tappable><div class='left'>
+            <img class='list-item-thumbnail imgStyle' src='${urlImg + value.urlImagen}.jpg'>
+            </div>  <div class='center prodStyle'>
+            <span class='list-item__subtitle'> ${value.codigo}<br>${value.estado}<br>$${value.precio}  
+            </span>  </div>
+            </ons-list-item>
+            <ons-list-item class='prod-Style__data'><div class='center tagSize'>${value.etiquetas.join(" / ")}</div>
+            </ons-list-item>
+            <ons-list-item><ons-button onclick='loadPage("detalle.html", "${value._id}")' class='btn'>Ver detalle</ons-button></ons-list-item>;
+            
+            </ons-list>`;
+
+        if (fav && favoritas.indexOf(value._id) !== -1) {
+            $("#listFavoritos").append(prod);
+            found = true;
+        }
+        else {
+            $("#listProductos").append(prod);
+
+        }
+    });
+
+    if (!found && data.length < 1) {
+        ons.notification.alert("No se encontraron productos");
+    }
+}
+
+function productosFavoritos(pId) {
+    let color;
+
+    if (favoritas.indexOf(pId) === -1) {
+        favoritas.push(pId);
+        ons.notification.toast(`Producto agregado`, { timeout: 1000 })
+        color = 'red';
+    } else {
+
+        favoritas.splice(favoritas.indexOf(pId), 1);
+        ons.notification.toast(`Producto eliminado`, { timeout: 1000 })
+        color = 'black';
+    }
+
+    document.getElementById('fav' + pId).style.color = color
+    window.localStorage.setItem('listaFavoritos', JSON.stringify(favoritas))
+    listarProductos(true);
+}
+
+function getProducto(idProd, origen) {
 
     $.ajax({
         url: urlApi + "productos/" + idProd,
@@ -264,18 +314,14 @@ function getProducto(idProd, origen) {
         contentType: 'application/json',
         headers: { "x-auth": token },
         success: function (response) {
-            console.log(response);
             handlerGetProducto(response.data, origen);
-            //detalleProducto(response.data);
         },
         error: function (response) {
-            console.log("fail Consultar Producots");
             console.log(response.error);
             ons.notification.alert("Hubo un problema para acceder al listado de productos.");
         }
     })
 
-    //return value;
 };
 
 function handlerGetProducto(data, origen) {
@@ -304,13 +350,13 @@ function detalleProducto(data) {
 
     if (data.stock > 0) disable = false;
 
-    prod += `<ons-list-item class='prod-Style__data'>  <ons-button class='right btn' disable='${disable}' onclick='loadPage("altaPedido.html", "${data._id}")'>Hacer pedido</ons-button></ons-list-item>
+    prod += `<ons-list-item>  <ons-button class='btn' disable='${disable}' onclick='loadPage("altaPedido.html", "${data._id}")'>Hacer pedido</ons-button></ons-list-item>
                  </ons-list-item>`;
 
     $("#bodyDetalles").append(prod);
 }
 
-function listarPedidos() {    
+function listarPedidos() {
 
     $("#listPedidos").empty();
 
@@ -320,18 +366,19 @@ function listarPedidos() {
         contentType: 'application/json',
         headers: { "x-auth": token },
         success: function (response) {
-            console.log(response)
             let found = false;
             $.each(response.data, function (i, value) {
 
                 let prod = `<ons-list modifier='inset' style='margin-bottom: 1vh'>
                         <img src="${urlImg}${value.producto.urlImagen}.jpg" style='width: 20%'>
-                        <ons-list-header>  ${value.producto.nombre}  </ons-list-header>
-                        <ons-list-item><div class='right'>$  ${value.total}  </div></ons-list-item>
-                        <ons-list-item>  ${value.producto.codigo}  </ons-list-item>
-                        <ons-list-item>  ${value.producto.estado}   </ons-list-item>
-                        <ons-list-item>  ${value.producto.etiquetas.join(" | ")}   </ons-list-item>
-                        <ons-list-item>Sucursal:   ${value.sucursal.nombre}   <div class='right'>Estado:   ${value.estado}  </div></ons-list-item>`;
+                        <ons-list-header> ${value.producto.nombre}</ons-list-header>
+                        <ons-list-item>${value.producto.estado}<div class='right'>$ ${value.total}</div></ons-list-item>
+                        <ons-list-item>${value.producto.codigo}<div class='right'>Sucursal: ${value.sucursal.nombre}</div></ons-list-item>
+                        <ons-list-item>${value.producto.etiquetas.join(" | ")}</ons-list-item>
+                        <ons-list-item>Estado: ${value.estado}<div class='right'></div></ons-list-item>`;
+                if (value.comentario) {
+                    prod += `<ons-list-item>Comentario: ${value.comentario}</ons-list-item>`;
+                }
 
                 found = true;
                 if (value.estado === "pendiente") {
@@ -340,7 +387,7 @@ function listarPedidos() {
                 else {
                     prod += `<ons-button onclick='promptPedido()' disabled='true'>Cerrar Pedido</ons-button>`;
                 }
-                $("#listPedidos").append(prod  + "</ons-list>");
+                $("#listPedidos").append(prod + "</ons-list>");
             });
 
             if (!found) {
@@ -365,9 +412,9 @@ function promptPedido(idPedido) {
                 comment = i;
                 modificarPedido(idPedido, comment);
             } else {
-                ons.notification.toast('Comentario necesario', { timeout: 2000 });
+                ons.notification.toast('Comentario necesario', { timeout: 1000 });
                 promptPedido(idPedido);
-            }            
+            }
         })
 }
 
@@ -405,9 +452,8 @@ function getSucursales() {
             //preparo el mapa
 
         },
-        error: function (response) {
+        error: function () {
             console.log("Sucursal no obtenida");
-            console.log(response);
         }
     })
 }
@@ -431,7 +477,7 @@ function totalPedido() {
     let price = $("#precio").text();
 
     if (isNaN(qty)) {
-        ons.notification.toast("Cantidad debe ser numerico.", { timeout: 2000 })
+        ons.notification.toast("Cantidad debe ser numerico.", { timeout: 1000 })
     } else {
         total = price * qty;
         $("#precioTotal").text(total);
@@ -461,12 +507,10 @@ function altaPedido(idProd) {
             headers: { "x-auth": token },
             data: JSON.stringify(data),
             success: function (response) {
-                console.log(response)
                 ons.notification.alert("Pedido creado.");
             },
             error: function (response) {
                 console.log("fail alta Pedidos");
-                console.log(response);
                 ons.notification.alert("Hubo un problema al realizar alta de Pedido.");
             }
         })
@@ -488,12 +532,12 @@ function modificarPedido(idPedido, comentario) {
         headers: { "x-auth": token },
         data: JSON.stringify(data),
         success: function () {
-            ons.notification.toast('Pedido modificado exitosamente', { timeout: 2000 })
+            ons.notification.toast('Pedido modificado exitosamente', { timeout: 1000 })
             loadPage("pedidos.html");
         },
         error: function () {
 
-            ons.notification.toast("Error al modificar el pedido", { timeout: 2000 });
+            ons.notification.toast("Error al modificar el pedido", { timeout: 1000 });
         }
     })
 };
@@ -545,9 +589,10 @@ function buscarPosicionSucursal(sucursal) {
                 L.marker([sucGeolocation.lat, sucGeolocation.lon]).addTo(mymap).bindPopup(`${sucursal.nombre} ${distanciaKm}km`);
             }
             else {
-                ons.notification.toast('Error al obtener ubicación de la sucursal', { timeout: 2000 });
+                ons.notification.toast('Error al obtener ubicación de la sucursal', { timeout: 1000 });
             }
         },
         error: function () { console.log('Error') }
     })
 }
+
